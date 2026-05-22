@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { autenticacao } from '../config/firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
+import { autenticacao, bd } from '../config/firebaseConfig';
 
 export default function TelaCadastro({ navigation }) {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
   const fazerCadastro = async () => {
     try {
-      await createUserWithEmailAndPassword(autenticacao, email, senha);
+      const respostaCadastro = await createUserWithEmailAndPassword(autenticacao, email, senha);
+      const usuarioId = respostaCadastro.user.uid;
+
+      await addDoc(collection(bd, 'usuarios'), {
+        nome: nome,
+        email: email,
+        uid: usuarioId,
+        dataCriacao: new Date()
+      });
+
       navigation.navigate('Login');
     } catch (erro) {
       setErro('Erro ao cadastrar. Tente novamente.');
@@ -19,10 +30,12 @@ export default function TelaCadastro({ navigation }) {
 
   return (
     <View style={estilos.container}>
+      <Text>Nome</Text>
+      <TextInput style={estilos.input} value={nome} onChangeText={setNome} placeholder="Digite seu nome" />
       <Text>Email</Text>
-      <TextInput style={estilos.input} value={email} onChangeText={setEmail} />
+      <TextInput style={estilos.input} value={email} onChangeText={setEmail} placeholder="Digite seu email" />
       <Text>Senha</Text>
-      <TextInput style={estilos.input} value={senha} onChangeText={setSenha} secureTextEntry />
+      <TextInput style={estilos.input} value={senha} onChangeText={setSenha} secureTextEntry placeholder="Digite sua senha" />
       <Button title="Cadastrar" onPress={fazerCadastro} />
       {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
     </View>
