@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Camadas.Navigator>
+      <Camadas.Navigator screenOptions={{ headerShown: false }}>
         {usuario ? (
           <Camadas.Screen name="Home" component={TelaHome} />
         ) : (
