@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TelaLogin from './telas/TelaLogin';
@@ -20,17 +21,19 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Camadas.Navigator screenOptions={{ headerShown: false }}>
-        {usuario ? (
-          <Camadas.Screen name="Home" component={TelaHome} />
-        ) : (
-          <>
-            <Camadas.Screen name="Login" component={TelaLogin} />
-            <Camadas.Screen name="Cadastro" component={TelaCadastro} />
-          </>
-        )}
-      </Camadas.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Camadas.Navigator screenOptions={{ headerShown: false }}>
+          {usuario ? (
+            <Camadas.Screen name="Home" component={TelaHome} />
+          ) : (
+            <>
+              <Camadas.Screen name="Login" component={TelaLogin} />
+              <Camadas.Screen name="Cadastro" component={TelaCadastro} />
+            </>
+          )}
+        </Camadas.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
