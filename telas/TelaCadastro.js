@@ -31,56 +31,56 @@ export default function TelaCadastro({ navigation }) {
   return (
     <View style={estilos.container}>
       <View style={estilos.conteudo}>
-        <Image 
+        <Image
           source={require('./imagenslogin/BOOK FEST (2).png')}
           style={estilos.logo}
         />
-        
+
         <View style={estilos.formulario}>
           <Text style={estilos.label}>Nome</Text>
-          <TextInput 
-            style={estilos.input} 
-            value={nome} 
+          <TextInput
+            style={estilos.input}
+            value={nome}
             onChangeText={setNome}
             placeholder="Digite seu nome"
             placeholderTextColor="#999"
           />
-          
+
           <Text style={estilos.label}>E-mail</Text>
-          <TextInput 
-            style={estilos.input} 
-            value={email} 
+          <TextInput
+            style={estilos.input}
+            value={email}
             onChangeText={setEmail}
             placeholder="seu@email.com"
             placeholderTextColor="#999"
           />
-          
+
           <Text style={estilos.label}>Senha</Text>
-          <TextInput 
-            style={estilos.input} 
-            value={senha} 
-            onChangeText={setSenha} 
+          <TextInput
+            style={estilos.input}
+            value={senha}
+            onChangeText={setSenha}
             secureTextEntry
             placeholder="••••••••"
             placeholderTextColor="#999"
           />
-          
+
           {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
-          
+
           <View style={estilos.botaoContainer}>
-            <Button 
-              title="Cadastrar" 
+            <Button
+              title="Cadastrar"
               onPress={fazerCadastro}
               color="#D3968C"
             />
           </View>
-          
-          <Text style={estilos.textoCadastro}>Já tem uma conta? </Text>
-          <Button 
-            title="Faça login aqui" 
+
+          <Button
+            title="Faça login aqui"
             onPress={() => navigation.navigate('Login')}
             color="#0A3323"
           />
+          <Text style={estilos.textoCadastro}>Já tem uma conta? </Text>
         </View>
       </View>
     </View>
@@ -88,7 +88,7 @@ export default function TelaCadastro({ navigation }) {
 }
 
 const estilos = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     backgroundColor: '#F7F4D5',
   },
@@ -99,38 +99,39 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 210,
-    height: 210,
+    width: 260,
+    height: 260,
     resizeMode: 'cover',
     alignSelf: 'center',
     marginBottom: 10,
   },
   formulario: {
-    gap: 15,
+    gap: 5,
   },
   label: {
     fontSize: 14,
     color: '#333',
     fontWeight: '500',
-    marginBottom: 5,
   },
-  input: { 
+  input: {
     borderWidth: 1,
     borderColor: '#DDD',
-    borderRadius: 8,
-    paddingHorizontal: 25,
-    paddingVertical: 14,
+    borderRadius: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
     backgroundColor: '#FFF',
     fontSize: 14,
+    height: 40,
+    width: 250,
   },
   botaoContainer: {
     marginTop: 10,
-    borderRadius: 8,
+    borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: '#D3968C',
   },
-  erro: { 
-    color: '#D32F2F', 
+  erro: {
+    color: '#D32F2F',
     marginTop: 5,
     fontSize: 12,
     fontWeight: '500',
