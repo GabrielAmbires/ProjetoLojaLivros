@@ -19,47 +19,47 @@ export default function TelaLogin({ navigation }) {
   return (
     <View style={estilos.container}>
       <View style={estilos.conteudo}>
-        <Image 
+        <Image
           source={require('./imagenslogin/BOOK FEST (2).png')}
           style={estilos.logo}
         />
-        
+
         <View style={estilos.formulario}>
           <Text style={estilos.label}>E-mail</Text>
-          <TextInput 
-            style={estilos.input} 
-            value={email} 
+          <TextInput
+            style={estilos.input}
+            value={email}
             onChangeText={setEmail}
             placeholder="seu@email.com"
             placeholderTextColor="#999"
           />
-          
+
           <Text style={estilos.label}>Senha</Text>
-          <TextInput 
-            style={estilos.input} 
-            value={senha} 
-            onChangeText={setSenha} 
+          <TextInput
+            style={estilos.input}
+            value={senha}
+            onChangeText={setSenha}
             secureTextEntry
             placeholder="••••••••"
             placeholderTextColor="#999"
           />
-          
+
           {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
-          
+
           <View style={estilos.botaoContainer}>
-            <Button 
-              title="Login" 
+            <Button
+              title="Login"
               onPress={fazerLogin}
               color="#D3968C"
             />
           </View>
-          
-          <Text style={estilos.textoCadastro}>Não tem uma conta? </Text>
-          <Button 
-            title="Cadastre-se aqui" 
-            onPress={() => navigation.navigate('Cadastro')}
-            color="#0A3323"
-          />
+          <View style={estilos.botaoCadastro}>
+            <Button 
+              title="Cadastre-se aqui"
+              onPress={() => navigation.navigate('Cadastro')}
+              color="#0A3323" />
+            <Text style={estilos.textoCadastro}>Não tem uma conta? </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -67,7 +67,7 @@ export default function TelaLogin({ navigation }) {
 }
 
 const estilos = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     backgroundColor: '#F7F4D5',
   },
@@ -85,31 +85,32 @@ const estilos = StyleSheet.create({
     marginBottom: 10,
   },
   formulario: {
-    gap: 15,
+    gap: 5,
   },
   label: {
     fontSize: 14,
     color: '#333',
     fontWeight: '500',
-    marginBottom: 5,
   },
-  input: { 
+  input: {
     borderWidth: 1,
     borderColor: '#DDD',
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 15,
     paddingVertical: 12,
     backgroundColor: '#FFF',
     fontSize: 14,
+    height: 40,
+    width: 250,
   },
   botaoContainer: {
-    marginTop: 10,
-    borderRadius: 8,
+    borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: '#D3968C',
+    marginTop: 15,
   },
-  erro: { 
-    color: '#D32F2F', 
+  erro: {
+    color: '#D32F2F',
     marginTop: 5,
     fontSize: 12,
     fontWeight: '500',
@@ -118,6 +119,11 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
     fontSize: 13,
-    marginTop: 15,
+    marginTop: 5,
+  },
+  botaoCadastro: {
+    marginTop: 5,
+    borderRadius: 8,
+    
   },
 });
