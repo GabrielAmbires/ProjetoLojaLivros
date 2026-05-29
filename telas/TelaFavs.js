@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const favoritos = [
     {
@@ -30,6 +30,18 @@ const favoritos = [
 ];
 
 export default function TelaFavs() {
+    const [favoritosState, setFavoritosState] = useState(
+        favoritos.map((item) => ({ ...item, marcado: true }))
+    );
+
+    const alternarFavorito = (id) => {
+        setFavoritosState((prev) =>
+            prev.map((item) =>
+                item.id === id ? { ...item, marcado: !item.marcado } : item
+            )
+        );
+    };
+
     const renderItem = ({ item }) => (
         <View style={estilos.card}>
             <Image source={item.imagem} style={estilos.cardImage} />
@@ -40,8 +52,15 @@ export default function TelaFavs() {
                     <TouchableOpacity style={[estilos.iconButton, estilos.cardActionsIcon]}>
                         <MaterialCommunityIcons name="cart-outline" size={20} color="#4A5938" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={estilos.iconButton}>
-                        <AntDesign name="hearto" size={20} color="#B45D5D" />
+                    <TouchableOpacity
+                        style={estilos.iconButton}
+                        onPress={() => alternarFavorito(item.id)}
+                    >
+                        <Ionicons
+                            name={item.marcado ? 'heart' : 'heart-outline'}
+                            size={20}
+                            color={item.marcado ? '#B45D5D' : '#8A8A8A'}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -63,7 +82,7 @@ export default function TelaFavs() {
             </View>
 
             <FlatList
-                data={favoritos}
+                data={favoritosState}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={estilos.listContent}
