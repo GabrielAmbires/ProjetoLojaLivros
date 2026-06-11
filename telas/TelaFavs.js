@@ -7,13 +7,13 @@ const favoritos = [
         id: '1',
         titulo: 'Powerless',
         preco: '40,00',
-        imagem: require('./imagenslivros/2.png'),
+        imagem: require('./imagenslivros/1.png'),
     },
     {
         id: '2',
         titulo: 'Eu beijei...',
         preco: '30,00',
-        imagem: require('./imagenslivros/3.png'),
+        imagem: require('./imagenslivros/2.png'),
     },
     {
         id: '3',
@@ -25,8 +25,45 @@ const favoritos = [
         id: '4',
         titulo: 'Eu beijei...',
         preco: '30,00',
-        imagem: require('./imagenslivros/3.png'),
+        imagem: require('./imagenslivros/4.png'),
     },
+    {
+        id: '5',
+        titulo: 'Powerless',
+        preco: '40,00',
+        imagem: require('./imagenslivros/5.png'),
+    },
+    {
+        id: '6',
+        titulo: 'Eu beijei...',
+        preco: '30,00',
+        imagem: require('./imagenslivros/6.png'),
+    },
+    {
+        id: '7',
+        titulo: 'Eu beijei...',
+        preco: '30,00',
+        imagem: require('./imagenslivros/7.png'),
+    },
+    {
+        id: '8',
+        titulo: 'Eu beijei...',
+        preco: '30,00',
+        imagem: require('./imagenslivros/8.png'),
+    },
+    {
+        id: '9',
+        titulo: 'Eu beijei...',
+        preco: '30,00',
+        imagem: require('./imagenslivros/9.png'),
+    },
+    {
+        id: '10',
+        titulo: 'Eu beijei...',
+        preco: '30,00',
+        imagem: require('./imagenslivros/10.png'),
+    },
+
 ];
 
 export default function TelaFavs() {
@@ -46,8 +83,8 @@ export default function TelaFavs() {
         <View style={estilos.card}>
             <Image source={item.imagem} style={estilos.cardImage} />
             <View style={estilos.cardBody}>
-                <Text style={estilos.cardTitle}>{item.titulo}</Text>
-                <Text style={estilos.cardPrice}>R$ {item.preco}</Text>
+                <Text style={estilos.CardTitulo}>{item.titulo}</Text>
+                <Text style={estilos.cardPreco}>R$ {item.preco}</Text>
                 <View style={estilos.cardActions}>
                     <TouchableOpacity style={[estilos.iconButton, estilos.cardActionsIcon]}>
                         <MaterialCommunityIcons name="cart-outline" size={20} color="#4A5938" />
@@ -179,17 +216,16 @@ const estilos = StyleSheet.create({
         height: 160,
         borderRadius: 14,
         marginBottom: 10,
-        resizeMode: 'cover',
     },
     cardBody: {
         marginBottom: 10,
     },
-    cardTitle: {
+    CardTitulo: {
         fontSize: 15,
         fontWeight: '700',
         color: '#35462E',
     },
-    cardPrice: {
+    cardPreco: {
         marginTop: 4,
         fontSize: 13,
         fontWeight: '600',
@@ -244,6 +280,7 @@ const estilos = StyleSheet.create({
     },
     tabButtonActive: {
         backgroundColor: '#41623A',
+        transparent: true,
         width: 44,
         height: 44,
         borderRadius: 12,
