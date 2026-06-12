@@ -59,21 +59,9 @@ const produtos = [
   },
   {
     id: '10',
-    titulo: 'Oferta especial',
-    preco: '29,00',
-    imagem: require('./imagenslivros/10.png'),
-  },
-  {
-    id: '11',
-    titulo: 'Lancamento',
-    preco: '38,00',
-    imagem: require('./imagenslivros/11.png'),
-  },
-  {
-    id: '12',
-    titulo: 'Mais vendido',
-    preco: '42,00',
-    imagem: require('./imagenslivros/12.png'),
+    titulo: 'Powerless',
+    preco: '40,00',
+    imagem: require('./imagenslivros/5.png'),
   },
 ];
 

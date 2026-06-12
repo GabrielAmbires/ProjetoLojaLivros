@@ -51,18 +51,6 @@ const favoritos = [
         preco: '30,00',
         imagem: require('./imagenslivros/8.png'),
     },
-    {
-        id: '9',
-        titulo: 'Eu beijei...',
-        preco: '30,00',
-        imagem: require('./imagenslivros/9.png'),
-    },
-    {
-        id: '10',
-        titulo: 'Eu beijei...',
-        preco: '30,00',
-        imagem: require('./imagenslivros/10.png'),
-    },
 ];
 
 export default function TelaFavs({ navigation }) {

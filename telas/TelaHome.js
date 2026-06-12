@@ -66,7 +66,7 @@ export default function TelaHome({ navigation }) {
       <View style={estilos.header}>
         <View>
           <Text style={estilos.saudacao}>Ola, {nome || 'leitor'}!</Text>
-          <Text style={estilos.titulo}>Book Fest</Text>
+          <Text style={estilos.titulo}>Folha Viva</Text>
         </View>
 
         <TouchableOpacity style={estilos.headerButton} onPress={fazerLogout}>

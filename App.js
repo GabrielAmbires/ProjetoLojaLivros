@@ -36,9 +36,9 @@ export default function App() {
             </>
           ) : (
             <>
+              <Camadas.Screen name="Home" component={TelaHome} />
               <Camadas.Screen name="Login" component={TelaLogin} />
               <Camadas.Screen name="Cadastro" component={TelaCadastro} />
-              <Camadas.Screen name="Home" component={TelaHome} />
               <Camadas.Screen name="Produtos" component={TelaProdutos} />
               <Camadas.Screen name="Favs" component={TelaFavs} />
               <Camadas.Screen name="produto" component={TelaDoProduto} />
