@@ -22,7 +22,7 @@ export default function TelaCadastro({ navigation }) {
         dataCriacao: new Date()
       });
 
-      navigation.navigate('Login');
+      navigation.navigate('Home');
     } catch (erro) {
       setErro('Erro ao cadastrar. Tente novamente.');
     }

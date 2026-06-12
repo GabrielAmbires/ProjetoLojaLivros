@@ -11,6 +11,7 @@ export default function TelaLogin({ navigation }) {
   const fazerLogin = async () => {
     try {
       await signInWithEmailAndPassword(autenticacao, email, senha);
+      navigation.navigate('Home');
     } catch (erro) {
       setErro('Erro ao fazer login. Verifique seus dados.');
     }

@@ -69,6 +69,7 @@ export default function TelaFavs({ navigation }) {
     const [favoritosState, setFavoritosState] = useState(
         favoritos.map((item) => ({ ...item, marcado: true }))
     );
+    const [abaAtiva, setAbaAtiva] = useState('favoritos');
 
     const totalFavoritos = favoritosState.filter((item) => item.marcado).length;
 
@@ -80,10 +81,20 @@ export default function TelaFavs({ navigation }) {
         );
     };
 
+    const navegarPelaBarra = (aba, tela) => {
+        setAbaAtiva(aba);
+
+        if (tela) {
+            navigation.navigate(tela);
+        }
+    };
+
     const renderItem = ({ item }) => (
         <View style={estilos.card}>
             <View style={estilos.imageContainer}>
-                <Image source={item.imagem} style={estilos.cardImage} />
+                <TouchableOpacity style={estilos.imageTouch} onPress={() => navigation.navigate('produto')}>
+                    <Image source={item.imagem} style={estilos.cardImage} />
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     style={estilos.favoriteButton}
@@ -107,13 +118,13 @@ export default function TelaFavs({ navigation }) {
                         <Text style={estilos.ratingText}>4,8</Text>
                     </View>
 
-                    <TouchableOpacity style={estilos.iconButton}>
+                    <TouchableOpacity style={estilos.iconButton} onPress={() => navigation.navigate('produto')}>
                         <MaterialCommunityIcons name="cart-plus" size={20} color="#31533A" />
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <TouchableOpacity style={estilos.buyButton}>
+            <TouchableOpacity style={estilos.buyButton} onPress={() => navigation.navigate('produto')}>
                 <Text style={estilos.buyText}>Comprar</Text>
                 <Ionicons name="arrow-forward" size={15} color="#FFF" style={estilos.buyIcon} />
             </TouchableOpacity>
@@ -123,7 +134,7 @@ export default function TelaFavs({ navigation }) {
     return (
         <View style={estilos.container}>
             <View style={estilos.header}>
-                <TouchableOpacity style={estilos.headerButton} onPress={() => navigation?.goBack()}>
+                <TouchableOpacity style={estilos.headerButton} onPress={() => navigation.navigate('Home')}>
                     <Ionicons name="chevron-back" size={22} color="#FFF" />
                 </TouchableOpacity>
 
@@ -164,17 +175,29 @@ export default function TelaFavs({ navigation }) {
             />
 
             <View style={estilos.tabBar}>
-                <TouchableOpacity style={estilos.tabButton}>
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'home' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('home', 'Home')}
+                >
                     <Ionicons name="home-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={estilos.tabButton}>
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'carrinho' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('carrinho', 'produto')}
+                >
                     <Ionicons name="cart-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={estilos.tabButton}>
-                    <MaterialCommunityIcons name="shield-outline" size={24} color="#FFF" />
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'produtos' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('produtos', 'Produtos')}
+                >
+                    <Ionicons name="grid-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={[estilos.tabButton, estilos.tabButtonActive]}>
-                    <Ionicons name="heart" size={24} color="#FFF" />
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'favoritos' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('favoritos', 'Favs')}
+                >
+                    <Ionicons name="heart-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -314,6 +337,10 @@ const estilos = StyleSheet.create({
         height: 158,
         borderRadius: 14,
         resizeMode: 'contain',
+    },
+    imageTouch: {
+        width: '100%',
+        alignItems: 'center',
     },
     favoriteButton: {
         position: 'absolute',

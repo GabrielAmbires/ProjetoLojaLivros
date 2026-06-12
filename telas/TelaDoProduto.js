@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TelaDoProduto({ navigation }) {
+  const [abaAtiva, setAbaAtiva] = useState('carrinho');
+
+  const navegarPelaBarra = (aba, tela) => {
+    setAbaAtiva(aba);
+
+    if (tela) {
+      navigation.navigate(tela);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -12,7 +22,7 @@ export default function TelaDoProduto({ navigation }) {
 
         <Text style={styles.headerTitle}>Detalhes</Text>
 
-        <TouchableOpacity style={styles.headerButton}>
+        <TouchableOpacity style={styles.headerButton} onPress={() => navigation.navigate('Favs')}>
           <Ionicons name="heart-outline" size={22} color="#FFF" />
         </TouchableOpacity>
 
@@ -91,28 +101,40 @@ export default function TelaDoProduto({ navigation }) {
       </ScrollView>
 
       <View style={styles.actionBar}>
-        <TouchableOpacity style={styles.cartButton}>
+        <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Favs')}>
           <MaterialCommunityIcons name="cart-plus" size={22} color="#31533A" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buyButton}>
+        <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate('Favs')}>
           <Text style={styles.buyButtonText}>Comprar agora</Text>
           <Ionicons name="arrow-forward" size={18} color="#FFF" style={styles.buttonIcon} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity
+          style={[styles.navButton, abaAtiva === 'home' && styles.navButtonActive]}
+          onPress={() => navegarPelaBarra('home', 'Home')}
+        >
           <Ionicons name="home-outline" size={24} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity
+          style={[styles.navButton, abaAtiva === 'carrinho' && styles.navButtonActive]}
+          onPress={() => navegarPelaBarra('carrinho', 'produto')}
+        >
           <Ionicons name="cart-outline" size={24} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <MaterialCommunityIcons name="shield-outline" size={24} color="#FFF" />
+        <TouchableOpacity
+          style={[styles.navButton, abaAtiva === 'produtos' && styles.navButtonActive]}
+          onPress={() => navegarPelaBarra('produtos', 'Produtos')}
+        >
+          <Ionicons name="grid-outline" size={24} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton, styles.navButtonActive]}>
-          <Ionicons name="heart" size={24} color="#FFF" />
+        <TouchableOpacity
+          style={[styles.navButton, abaAtiva === 'favoritos' && styles.navButtonActive]}
+          onPress={() => navegarPelaBarra('favoritos', 'Favs')}
+        >
+          <Ionicons name="heart-outline" size={24} color="#FFF" />
         </TouchableOpacity>
       </View>
     </View>

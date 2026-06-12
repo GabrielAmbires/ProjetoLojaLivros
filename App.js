@@ -7,6 +7,7 @@ import TelaCadastro from './telas/TelaCadastro';
 import TelaHome from './telas/TelaHome';
 import TelaFavs from './telas/TelaFavs';
 import TelaDoProduto from './telas/TelaDoProduto';
+import TelaProdutos from './telas/TelaProdutos';
 import { onAuthStateChanged } from 'firebase/auth';
 import { autenticacao } from './config/firebaseConfig';
 
@@ -27,18 +28,20 @@ export default function App() {
       <NavigationContainer>
         <Camadas.Navigator screenOptions={{ headerShown: false }}>
           {usuario ? (
-            <Camadas.Screen name="Home" component={TelaHome} />
+            <>
+              <Camadas.Screen name="Home" component={TelaHome} />
+              <Camadas.Screen name="Produtos" component={TelaProdutos} />
+              <Camadas.Screen name="Favs" component={TelaFavs} />
+              <Camadas.Screen name="produto" component={TelaDoProduto} />
+            </>
           ) : (
             <>
-            <Camadas.Screen name="Login" component={TelaLogin} />
+              <Camadas.Screen name="Login" component={TelaLogin} />
+              <Camadas.Screen name="Cadastro" component={TelaCadastro} />
+              <Camadas.Screen name="Home" component={TelaHome} />
+              <Camadas.Screen name="Produtos" component={TelaProdutos} />
               <Camadas.Screen name="Favs" component={TelaFavs} />
-            <Camadas.Screen name="produto" component={TelaDoProduto} />
-             <Camadas.Screen name="Cadastro" component={TelaCadastro} />
-              
-              
-
-
-             
+              <Camadas.Screen name="produto" component={TelaDoProduto} />
             </>
           )}
         </Camadas.Navigator>
