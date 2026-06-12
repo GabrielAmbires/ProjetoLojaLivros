@@ -96,29 +96,6 @@ export default function TelaHome({ navigation }) {
             style={estilos.logo}
           />
         </View>
-
-        <View style={estilos.sectionHeader}>
-          <Text style={estilos.sectionTitle}>Categorias</Text>
-          <Text style={estilos.sectionAction}>Explorar</Text>
-        </View>
-
-        <View style={estilos.categoryRow}>
-          <TouchableOpacity style={estilos.categoryCard}>
-            <Ionicons name="heart-outline" size={22} color="#31533A" />
-            <Text style={estilos.categoryText}>Romance</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={estilos.categoryCard}>
-            <Ionicons name="sparkles-outline" size={22} color="#31533A" />
-            <Text style={estilos.categoryText}>TikTok</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={estilos.categoryCard}>
-            <Ionicons name="pricetag-outline" size={22} color="#31533A" />
-            <Text style={estilos.categoryText}>Ofertas</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={estilos.sectionHeader}>
           <Text style={estilos.sectionTitle}>Destaques</Text>
           <Text style={estilos.sectionAction}>Hoje</Text>
@@ -295,7 +272,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 22,
+    marginTop: 50,
     marginBottom: 12,
   },
   sectionTitle: {
