@@ -8,6 +8,7 @@ import TelaHome from './telas/TelaHome';
 import TelaFavs from './telas/TelaFavs';
 import TelaDoProduto from './telas/TelaDoProduto';
 import TelaProdutos from './telas/TelaProdutos';
+import TelaCheckout from './telas/TelaCheckout';
 import { onAuthStateChanged } from 'firebase/auth';
 import { autenticacao } from './config/firebaseConfig';
 
@@ -33,6 +34,7 @@ export default function App() {
               <Camadas.Screen name="Produtos" component={TelaProdutos} />
               <Camadas.Screen name="Favs" component={TelaFavs} />
               <Camadas.Screen name="produto" component={TelaDoProduto} />
+              <Camadas.Screen name="Checkout" component={TelaCheckout} />
             </>
           ) : (
             <>
@@ -42,6 +44,7 @@ export default function App() {
               <Camadas.Screen name="Produtos" component={TelaProdutos} />
               <Camadas.Screen name="Favs" component={TelaFavs} />
               <Camadas.Screen name="produto" component={TelaDoProduto} />
+              <Camadas.Screen name="Checkout" component={TelaCheckout} />
             </>
           )}
         </Camadas.Navigator>

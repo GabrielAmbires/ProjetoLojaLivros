@@ -8,7 +8,7 @@ import { autenticacao, bd } from '../config/firebaseConfig';
 const livrosDestaque = [
   {
     id: '1',
-    titulo: 'Powerless',
+    titulo: 'Melhor do que nos filmes',
     preco: 'R$ 40,00',
     imagem: require('./imagenslivros/1.png'),
   },
@@ -16,13 +16,13 @@ const livrosDestaque = [
     id: '2',
     titulo: 'Melhor do que nos filmes',
     preco: 'R$ 28,00',
-    imagem: require('./imagenslivros/3.png'),
+    imagem: require('./imagenslivros/2.png'),
   },
   {
     id: '3',
     titulo: 'Eu beijei...',
     preco: 'R$ 30,00',
-    imagem: require('./imagenslivros/2.png'),
+    imagem: require('./imagenslivros/3.png'),
   },
 ];
 
@@ -106,7 +106,7 @@ export default function TelaHome({ navigation }) {
             <TouchableOpacity
               key={livro.id}
               style={estilos.bookCard}
-              onPress={() => navigation.navigate('produto')}
+              onPress={() => navigation.navigate('produto', { id: livro.id })}
             >
               <View style={estilos.bookImageBox}>
                 <Image source={livro.imagem} style={estilos.bookImage} />

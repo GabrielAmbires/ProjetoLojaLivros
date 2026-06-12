@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const favoritos = [
@@ -58,8 +58,13 @@ export default function TelaFavs({ navigation }) {
         favoritos.map((item) => ({ ...item, marcado: true }))
     );
     const [abaAtiva, setAbaAtiva] = useState('favoritos');
+    const [busca, setBusca] = useState('');
 
-    const totalFavoritos = favoritosState.filter((item) => item.marcado).length;
+    const favoritosFiltrados = favoritosState.filter((item) =>
+        item.titulo.toLowerCase().includes(busca.toLowerCase())
+    );
+
+    const totalFavoritos = favoritosFiltrados.filter((item) => item.marcado).length;
 
     const alternarFavorito = (id) => {
         setFavoritosState((prev) =>
@@ -80,7 +85,7 @@ export default function TelaFavs({ navigation }) {
     const renderItem = ({ item }) => (
         <View style={estilos.card}>
             <View style={estilos.imageContainer}>
-                <TouchableOpacity style={estilos.imageTouch} onPress={() => navigation.navigate('produto')}>
+                <TouchableOpacity style={estilos.imageTouch} onPress={() => navigation.navigate('produto', { id: item.id })}>
                     <Image source={item.imagem} style={estilos.cardImage} />
                 </TouchableOpacity>
 
@@ -106,13 +111,13 @@ export default function TelaFavs({ navigation }) {
                         <Text style={estilos.ratingText}>4,8</Text>
                     </View>
 
-                    <TouchableOpacity style={estilos.iconButton} onPress={() => navigation.navigate('produto')}>
+                    <TouchableOpacity style={estilos.iconButton} onPress={() => navigation.navigate('produto', { id: item.id })}>
                         <MaterialCommunityIcons name="cart-plus" size={20} color="#31533A" />
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <TouchableOpacity style={estilos.buyButton} onPress={() => navigation.navigate('produto')}>
+            <TouchableOpacity style={estilos.buyButton} onPress={() => navigation.navigate('produto', { id: item.id })}>
                 <Text style={estilos.buyText}>Comprar</Text>
                 <Ionicons name="arrow-forward" size={15} color="#FFF" style={estilos.buyIcon} />
             </TouchableOpacity>
@@ -131,29 +136,28 @@ export default function TelaFavs({ navigation }) {
                     <Text style={estilos.subtitle}>{totalFavoritos} livros salvos</Text>
                 </View>
 
-                <TouchableOpacity style={estilos.headerButton}>
-                    <Ionicons name="search" size={21} color="#FFF" />
-                </TouchableOpacity>
-
                 <View style={estilos.decorationTop} />
                 <View style={estilos.decorationBottom} />
             </View>
 
-            <View style={estilos.summaryCard}>
-                <View style={estilos.summaryIcon}>
-                    <Ionicons name="heart" size={20} color="#FFF" />
-                </View>
-
-                <View style={estilos.summaryTextBox}>
-                    <Text style={estilos.summaryTitle}>Sua lista de desejos</Text>
-                    <Text style={estilos.summaryText}>
-                        Continue de onde parou e escolha o proximo livro.
-                    </Text>
-                </View>
+            <View style={estilos.searchContainer}>
+                <Ionicons name="search" size={18} color="#8A8A8A" style={estilos.searchIcon} />
+                <TextInput
+                    style={estilos.searchInput}
+                    placeholder="Pesquisar livro..."
+                    placeholderTextColor="#B8B8B8"
+                    value={busca}
+                    onChangeText={setBusca}
+                />
+                {busca.length > 0 && (
+                    <TouchableOpacity onPress={() => setBusca('')}>
+                        <Ionicons name="close-circle" size={18} color="#B8B8B8" />
+                    </TouchableOpacity>
+                )}
             </View>
 
             <FlatList
-                data={favoritosState}
+                data={favoritosFiltrados}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={estilos.listContent}
@@ -398,6 +402,32 @@ const estilos = StyleSheet.create({
     },
     buyIcon: {
         marginLeft: 6,
+    },
+    searchContainer: {
+        marginHorizontal: 18,
+        marginTop: 14,
+        marginBottom: 14,
+        backgroundColor: '#FFF8E5',
+        borderRadius: 16,
+        paddingHorizontal: 14,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 3,
+    },
+    searchIcon: {
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 14,
+        color: '#1F3A24',
+        fontWeight: '600',
+        paddingVertical: 0,
     },
     tabBar: {
         position: 'absolute',

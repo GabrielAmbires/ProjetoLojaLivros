@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const produtos = [
@@ -67,6 +67,11 @@ const produtos = [
 
 export default function TelaProdutos({ navigation }) {
   const [abaAtiva, setAbaAtiva] = useState('produtos');
+  const [busca, setBusca] = useState('');
+
+  const produtosFiltrados = produtos.filter((item) =>
+    item.titulo.toLowerCase().includes(busca.toLowerCase())
+  );
 
   const navegarPelaBarra = (aba, tela) => {
     setAbaAtiva(aba);
@@ -77,7 +82,7 @@ export default function TelaProdutos({ navigation }) {
   };
 
   const renderProduto = ({ item }) => (
-    <TouchableOpacity style={estilos.card} onPress={() => navigation.navigate('produto')}>
+    <TouchableOpacity style={estilos.card} onPress={() => navigation.navigate('produto', { id: item.id })}>
       <View style={estilos.imageContainer}>
         <Image source={item.imagem} style={estilos.cardImage} />
       </View>
@@ -89,9 +94,12 @@ export default function TelaProdutos({ navigation }) {
       <View style={estilos.cardFooter}>
         <Text style={estilos.cardPreco}>R$ {item.preco}</Text>
 
-        <View style={estilos.iconButton}>
+        <TouchableOpacity 
+          style={estilos.iconButton}
+          onPress={() => navigation.navigate('produto', { id: item.id })}
+        >
           <Ionicons name="cart-outline" size={18} color="#31533A" />
-        </View>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -108,12 +116,24 @@ export default function TelaProdutos({ navigation }) {
           <Text style={estilos.subtitle}>{produtos.length} livros disponiveis</Text>
         </View>
 
-        <TouchableOpacity style={estilos.headerButton}>
-          <Ionicons name="search" size={21} color="#FFF" />
-        </TouchableOpacity>
-
         <View style={estilos.decorationTop} />
         <View style={estilos.decorationBottom} />
+      </View>
+
+      <View style={estilos.searchContainer}>
+        <Ionicons name="search" size={18} color="#8A8A8A" style={estilos.searchIcon} />
+        <TextInput
+          style={estilos.searchInput}
+          placeholder="Pesquisar livro..."
+          placeholderTextColor="#B8B8B8"
+          value={busca}
+          onChangeText={setBusca}
+        />
+        {busca.length > 0 && (
+          <TouchableOpacity onPress={() => setBusca('')}>
+            <Ionicons name="close-circle" size={18} color="#B8B8B8" />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={estilos.summaryCard}>
@@ -123,12 +143,12 @@ export default function TelaProdutos({ navigation }) {
 
         <View style={estilos.summaryTextBox}>
           <Text style={estilos.summaryTitle}>Catalogo completo</Text>
-          <Text style={estilos.summaryText}>Veja todos os livros cadastrados na loja.</Text>
+          <Text style={estilos.summaryText}>{produtosFiltrados.length} de {produtos.length} livros</Text>
         </View>
       </View>
 
       <FlatList
-        data={produtos}
+        data={produtosFiltrados}
         renderItem={renderProduto}
         keyExtractor={(item) => item.id}
         contentContainerStyle={estilos.listContent}
@@ -325,6 +345,32 @@ const estilos = StyleSheet.create({
     backgroundColor: '#E8E0C7',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  searchContainer: {
+    marginHorizontal: 18,
+    marginTop: 14,
+    marginBottom: 14,
+    backgroundColor: '#FFF8E5',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1F3A24',
+    fontWeight: '600',
+    paddingVertical: 0,
   },
   tabBar: {
     position: 'absolute',

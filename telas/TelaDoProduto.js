@@ -2,8 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function TelaDoProduto({ navigation }) {
+const produtosDatabase = {
+  '1': { titulo: 'Powerless', autor: 'Matthew Cody', preco: '40,00', precoCheio: '80,00', desconto: '50%', imagem: require('./imagenslivros/1.png'), sinopse: 'Um jovem descobre poderes incríveis em um mundo onde super-heróis são comuns. Uma história envolvente de descoberta, amizade e poder.' },
+  '2': { titulo: 'Eu beijei...', autor: 'Anne Eliot', preco: '30,00', precoCheio: '60,00', desconto: '50%', imagem: require('./imagenslivros/2.png'), sinopse: 'Uma história comovente sobre amor, descoberta pessoal e conexão humana que vai tocar seu coração de maneira inesperada.' },
+  '3': { titulo: 'Melhor do que nos filmes', autor: 'Lynn Painter', preco: '28,00', precoCheio: '56,00', desconto: '50%', imagem: require('./imagenslivros/3.png'), sinopse: 'Sucesso viral no TikTok! Lynn Painter traz uma comédia romântica irresistível com uma protagonista determinada a encontrar seu "felizes para sempre".' },
+  '4': { titulo: 'Romance especial', autor: 'Sarah J. Maas', preco: '35,00', precoCheio: '70,00', desconto: '50%', imagem: require('./imagenslivros/4.png'), sinopse: 'Um romance épico repleto de magia, mistério e amor. Uma narrativa envolvente que prende desde a primeira página.' },
+  '5': { titulo: 'Powerless', autor: 'Matthew Cody', preco: '40,00', precoCheio: '80,00', desconto: '50%', imagem: require('./imagenslivros/5.png'), sinopse: 'Um jovem descobre poderes incríveis em um mundo onde super-heróis são comuns. Uma história envolvente de descoberta, amizade e poder.' },
+  '6': { titulo: 'Eu beijei...', autor: 'Anne Eliot', preco: '30,00', precoCheio: '60,00', desconto: '50%', imagem: require('./imagenslivros/6.png'), sinopse: 'Uma história comovente sobre amor, descoberta pessoal e conexão humana que vai tocar seu coração de maneira inesperada.' },
+  '7': { titulo: 'Novo romance', autor: 'Colleen Hoover', preco: '32,00', precoCheio: '64,00', desconto: '50%', imagem: require('./imagenslivros/7.png'), sinopse: 'Um romance contemporâneo que explora sentimentos profundos com a escrita sensível e tocante de um dos autores mais amados do momento.' },
+  '8': { titulo: 'Livro destaque', autor: 'John Green', preco: '45,00', precoCheio: '90,00', desconto: '50%', imagem: require('./imagenslivros/8.png'), sinopse: 'Uma obra que combina humor, emoção e profundidade em uma narrativa que marca para sempre o coração do leitor.' },
+  '9': { titulo: 'Favorito da semana', autor: 'Emily Henry', preco: '30,00', precoCheio: '60,00', desconto: '50%', imagem: require('./imagenslivros/9.png'), sinopse: 'Romance contemporâneo envolvente que equilibra com perfeição o humor leve e os sentimentos mais profundos e genuínos.' },
+  '10': { titulo: 'Powerless', autor: 'Matthew Cody', preco: '40,00', precoCheio: '80,00', desconto: '50%', imagem: require('./imagenslivros/5.png'), sinopse: 'Um jovem descobre poderes incríveis em um mundo onde super-heróis são comuns. Uma história envolvente de descoberta, amizade e poder.' },
+};
+
+export default function TelaDoProduto({ navigation, route }) {
   const [abaAtiva, setAbaAtiva] = useState('carrinho');
+  const [quantidade, setQuantidade] = useState(1);
+  
+  const produtoId = route?.params?.id || '3';
+  const produto = produtosDatabase[produtoId] || produtosDatabase['3'];
 
   const navegarPelaBarra = (aba, tela) => {
     setAbaAtiva(aba);
@@ -11,6 +28,23 @@ export default function TelaDoProduto({ navigation }) {
     if (tela) {
       navigation.navigate(tela);
     }
+  };
+
+  const handleComprarAgora = () => {
+    navigation.navigate('Checkout', { 
+      produto, 
+      quantidade, 
+      tipo: 'compra'
+    });
+  };
+
+  const handleAdicionarCarrinho = () => {
+    // Aqui você poderia adicionar ao carrinho e mostrar uma notificação
+    navigation.navigate('Checkout', { 
+      produto, 
+      quantidade, 
+      tipo: 'carrinho'
+    });
   };
 
   return (
@@ -34,7 +68,7 @@ export default function TelaDoProduto({ navigation }) {
         <View style={styles.hero}>
           <View style={styles.imageFrame}>
             <Image
-              source={require('./imagenslivros/3.png')}
+              source={produto.imagem}
               style={styles.bookImage}
             />
           </View>
@@ -53,8 +87,8 @@ export default function TelaDoProduto({ navigation }) {
         </View>
 
         <View style={styles.detailsCard}>
-          <Text style={styles.title}>Melhor do que nos filmes</Text>
-          <Text style={styles.author}>Lynn Painter</Text>
+          <Text style={styles.title}>{produto.titulo}</Text>
+          <Text style={styles.author}>{produto.autor}</Text>
 
           <View style={styles.infoRow}>
             <View style={styles.infoItem}>
@@ -75,37 +109,41 @@ export default function TelaDoProduto({ navigation }) {
 
           <View style={styles.priceContainer}>
             <View>
-              <Text style={styles.oldPrice}>De R$ 56,00</Text>
-              <Text style={styles.newPrice}>R$ 28,00</Text>
+              <Text style={styles.oldPrice}>De R$ {produto.precoCheio}</Text>
+              <Text style={styles.newPrice}>R$ {produto.preco}</Text>
             </View>
 
             <View style={styles.discountPill}>
-              <Text style={styles.discountText}>50% OFF</Text>
+              <Text style={styles.discountText}>{produto.desconto} OFF</Text>
             </View>
           </View>
 
           <Text style={styles.sectionTitle}>Sinopse</Text>
           <Text style={styles.description}>
-            Sucesso no TikTok, livro de Lynn Painter vai conquistar os fãs de comédias românticas com uma protagonista determinada a encontrar seu "felizes para sempre".
+            {produto.sinopse}
           </Text>
 
-          <Text style={styles.summary}>
-            Elizabeth Buxbaum sempre soube que o seu vizinho não seria um ...
-          </Text>
-
-          <TouchableOpacity style={styles.readMoreButton}>
-            <Text style={styles.readMoreText}>Leia mais</Text>
-            <Ionicons name="chevron-down" size={18} color="#31533A" />
-          </TouchableOpacity>
+          <View style={styles.quantityContainer}>
+            <Text style={styles.sectionTitle}>Quantidade</Text>
+            <View style={styles.quantityBox}>
+              <TouchableOpacity onPress={() => setQuantidade(Math.max(1, quantidade - 1))}>
+                <Ionicons name="remove-circle-outline" size={24} color="#31533A" />
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>{quantidade}</Text>
+              <TouchableOpacity onPress={() => setQuantidade(quantidade + 1)}>
+                <Ionicons name="add-circle-outline" size={24} color="#31533A" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </ScrollView>
 
       <View style={styles.actionBar}>
-        <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Favs')}>
+        <TouchableOpacity style={styles.cartButton} onPress={handleAdicionarCarrinho}>
           <MaterialCommunityIcons name="cart-plus" size={22} color="#31533A" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buyButton} onPress={() => navigation.navigate('Favs')}>
+        <TouchableOpacity style={styles.buyButton} onPress={handleComprarAgora}>
           <Text style={styles.buyButtonText}>Comprar agora</Text>
           <Ionicons name="arrow-forward" size={18} color="#FFF" style={styles.buttonIcon} />
         </TouchableOpacity>
@@ -364,6 +402,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#31533A',
     marginRight: 6,
+  },
+  quantityContainer: {
+    marginTop: 18,
+  },
+  quantityBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F7F4D5',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginTop: 8,
+  },
+  quantityText: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#31533A',
   },
   actionBar: {
     position: 'absolute',
