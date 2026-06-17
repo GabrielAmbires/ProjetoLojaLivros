@@ -1,31 +1,13 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Image } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
-import { autenticacao, bd } from '../config/firebaseConfig';
 
 export default function TelaCadastro({ navigation }) {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
 
-  const fazerCadastro = async () => {
-    try {
-      const respostaCadastro = await createUserWithEmailAndPassword(autenticacao, email, senha);
-      const usuarioId = respostaCadastro.user.uid;
-
-      await addDoc(collection(bd, 'usuarios'), {
-        nome: nome,
-        email: email,
-        uid: usuarioId,
-        dataCriacao: new Date()
-      });
-
-      navigation.navigate('Home');
-    } catch (erro) {
-      setErro('Erro ao cadastrar. Tente novamente.');
-    }
+  const fazerCadastro = () => {
+    navigation.navigate('Home', { cadastrado: true });
   };
 
   return (
@@ -64,8 +46,6 @@ export default function TelaCadastro({ navigation }) {
             placeholder="••••••••"
             placeholderTextColor="#999"
           />
-
-          {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
 
           <View style={estilos.botaoContainer}>
             <Button
@@ -129,12 +109,6 @@ const estilos = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: '#D3968C',
-  },
-  erro: {
-    color: '#D32F2F',
-    marginTop: 5,
-    fontSize: 12,
-    fontWeight: '500',
   },
   textoCadastro: {
     textAlign: 'center',

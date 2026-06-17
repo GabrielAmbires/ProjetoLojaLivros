@@ -26,9 +26,10 @@ const livrosDestaque = [
   },
 ];
 
-export default function TelaHome({ navigation }) {
+export default function TelaHome({ navigation, route }) {
   const [nome, setNome] = useState('');
   const [abaAtiva, setAbaAtiva] = useState('home');
+  const [mostrarCardCadastro, setMostrarCardCadastro] = useState(false);
 
   useEffect(() => {
     const buscarNomeUsuario = async () => {
@@ -49,8 +50,21 @@ export default function TelaHome({ navigation }) {
     buscarNomeUsuario();
   }, []);
 
-  const fazerLogout = () => {
-    signOut(autenticacao);
+  useEffect(() => {
+    if (route?.params?.cadastrado) {
+      setMostrarCardCadastro(true);
+    }
+  }, [route?.params?.cadastrado]);
+
+  const fazerLogout = async () => {
+    try {
+      await signOut(autenticacao);
+    } finally {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    }
   };
 
   const navegarPelaBarra = (aba, tela) => {
@@ -78,6 +92,18 @@ export default function TelaHome({ navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={estilos.content} showsVerticalScrollIndicator={false}>
+        {mostrarCardCadastro ? (
+          <View style={estilos.cardCadastro}>
+            <Text style={estilos.cardCadastroTexto}>Você esta cadastrado</Text>
+            <TouchableOpacity
+              style={estilos.cardCadastroFechar}
+              onPress={() => setMostrarCardCadastro(false)}
+            >
+              <Ionicons name="close" size={18} color="#1F3A24" />
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
         <View style={estilos.heroCard}>
           <View style={estilos.heroTextBox}>
             <Text style={estilos.heroTitle}>Encontre sua proxima leitura</Text>
@@ -145,6 +171,12 @@ export default function TelaHome({ navigation }) {
           onPress={() => navegarPelaBarra('favoritos', 'Favs')}
         >
           <Ionicons name="heart-outline" size={24} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[estilos.tabButton, abaAtiva === 'perfil' && estilos.tabButtonActive]}
+          onPress={() => navegarPelaBarra('perfil', 'Perfil')}
+        >
+          <Ionicons name="person-outline" size={24} color="#FFF" />
         </TouchableOpacity>
       </View>
     </View>
@@ -214,6 +246,39 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 18,
     paddingBottom: 92,
+  },
+  cardCadastro: {
+    backgroundColor: '#FFF8E5',
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingLeft: 16,
+    paddingRight: 48,
+    marginBottom: 14,
+    minHeight: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 4,
+  },
+  cardCadastroTexto: {
+    color: '#1F3A24',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  cardCadastroFechar: {
+    position: 'absolute',
+    right: 12,
+    top: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#E8E0C7',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   heroCard: {
     backgroundColor: '#FFF8E5',

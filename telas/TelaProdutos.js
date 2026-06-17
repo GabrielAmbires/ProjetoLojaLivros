@@ -182,6 +182,12 @@ export default function TelaProdutos({ navigation }) {
         >
           <Ionicons name="heart-outline" size={24} color="#FFF" />
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[estilos.tabButton, abaAtiva === 'perfil' && estilos.tabButtonActive]}
+          onPress={() => navegarPelaBarra('perfil', 'Perfil')}
+        >
+          <Ionicons name="person-outline" size={24} color="#FFF" />
+        </TouchableOpacity>
       </View>
     </View>
   );

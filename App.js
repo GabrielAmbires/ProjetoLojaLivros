@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -9,44 +9,23 @@ import TelaFavs from './telas/TelaFavs';
 import TelaDoProduto from './telas/TelaDoProduto';
 import TelaProdutos from './telas/TelaProdutos';
 import TelaCheckout from './telas/TelaCheckout';
-import { onAuthStateChanged } from 'firebase/auth';
-import { autenticacao } from './config/firebaseConfig';
+import TelaPerfil from './telas/TelaPerfil';
 
 const Camadas = createNativeStackNavigator();
 
 export default function App() {
-  const [usuario, setUsuario] = useState(null);
-
-  useEffect(() => {
-    const desinscrever = onAuthStateChanged(autenticacao, (usuarioAtual) => {
-      setUsuario(usuarioAtual);
-    });
-    return desinscrever;
-  }, []);
-
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Camadas.Navigator screenOptions={{ headerShown: false }}>
-          {usuario ? (
-            <>
-              <Camadas.Screen name="Home" component={TelaHome} />
-              <Camadas.Screen name="Produtos" component={TelaProdutos} />
-              <Camadas.Screen name="Favs" component={TelaFavs} />
-              <Camadas.Screen name="produto" component={TelaDoProduto} />
-              <Camadas.Screen name="Checkout" component={TelaCheckout} />
-            </>
-          ) : (
-            <>
-              <Camadas.Screen name="Home" component={TelaHome} />
-              <Camadas.Screen name="Login" component={TelaLogin} />
-              <Camadas.Screen name="Cadastro" component={TelaCadastro} />
-              <Camadas.Screen name="Produtos" component={TelaProdutos} />
-              <Camadas.Screen name="Favs" component={TelaFavs} />
-              <Camadas.Screen name="produto" component={TelaDoProduto} />
-              <Camadas.Screen name="Checkout" component={TelaCheckout} />
-            </>
-          )}
+        <Camadas.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+          <Camadas.Screen name="Login" component={TelaLogin} />
+          <Camadas.Screen name="Cadastro" component={TelaCadastro} />
+          <Camadas.Screen name="Home" component={TelaHome} />
+          <Camadas.Screen name="Produtos" component={TelaProdutos} />
+          <Camadas.Screen name="Favs" component={TelaFavs} />
+          <Camadas.Screen name="produto" component={TelaDoProduto} />
+          <Camadas.Screen name="Checkout" component={TelaCheckout} />
+          <Camadas.Screen name="Perfil" component={TelaPerfil} />
         </Camadas.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
