@@ -1,13 +1,19 @@
 <!DOCTYPE html>
+
 <html lang="pt-br">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Catálogo - Folha Viva</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 
 <body class="catalogo-page">
@@ -17,16 +23,24 @@
 <nav class="navbar">
 
 <div class="logo-area">
-<img src="logo.png" class="logo-img">
-<h1 class="logo">Folha Viva</h1>
+
+<img src="logo.png" class="logo-img" alt="Logo Folha Viva">
+
+<div class="logo-texto">
+    <h1>Folha Viva</h1>
+<span>Leitura, cultura e sustentabilidade</span>
+</div>
+
 </div>
 
 <ul class="menu">
+
 <li><a href="index.html">Início</a></li>
 <li><a href="index.html#sobre">Sobre</a></li>
 <li><a href="catalogo.html">Catálogo</a></li>
 <li><a href="index.html#impacto">Impacto</a></li>
 <li><a href="index.html#contato">Contato</a></li>
+
 </ul>
 
 <div class="carrinho">
@@ -37,102 +51,214 @@
 </nav>
 
 <div class="catalogo-header">
+
 <h1>Catálogo de Livros</h1>
-<p>Escolha sua próxima leitura</p>
+
+<p>
+Escolha sua próxima leitura
+</p>
+
 </div>
 
 <div class="filtro">
-<button class="active" data-cat="todos">Todos</button>
-<button data-cat="romance">Romance</button>
-<button data-cat="fantasia">Fantasia</button>
-<button data-cat="drama">Drama</button>
+
+<button class="active" data-cat="todos">
+Todos
+</button>
+
+<button data-cat="romance">
+Romance
+</button>
+
+<button data-cat="fantasia">
+Fantasia
+</button>
+
+<button data-cat="drama">
+Drama
+</button>
+
 </div>
 
 </header>
 
-<section class="catalogo">
+<main class="catalogo">
 
 <div class="grid">
 
 <div class="produto" data-cat="fantasia">
-<img src="imagenslivros/Tempestada de Ônix.png">
+
+<img src="imagenslivros/Tempestada de Ônix.png" alt="Tempestade de Ônix">
+
 <h3>Tempestade de Ônix</h3>
+
 <p>Fantasia</p>
+
 <strong>R$ 65,00</strong>
-<button class="add">Adicionar</button>
+
+<button class="add">
+Adicionar
+</button>
+
 </div>
 
 <div class="produto" data-cat="romance">
-<img src="imagenslivros/powerless.png">
+
+<img src="imagenslivros/powerless.png" alt="Powerless">
+
 <h3>Powerless</h3>
+
 <p>Romance</p>
+
 <strong>R$ 40,00</strong>
-<button class="add">Adicionar</button>
+
+<button class="add">
+Adicionar
+</button>
+
 </div>
 
 <div class="produto" data-cat="fantasia">
-<img src="imagenslivros/Guerra da Papoula.png">
+
+<img src="imagenslivros/Guerra da Papoula.png" alt="Guerra da Papoula">
+
 <h3>Guerra da Papoula</h3>
+
 <p>Fantasia</p>
+
 <strong>R$ 36,00</strong>
-<button class="add">Adicionar</button>
+
+<button class="add">
+Adicionar
+</button>
+
 </div>
 
 <div class="produto" data-cat="romance">
-<img src="imagenslivros/melhor do que nos filmes.png">
+
+<img src="imagenslivros/melhor do que nos filmes.png" alt="Melhor do que nos Filmes">
+
 <h3>Melhor do que nos Filmes</h3>
+
 <p>Romance</p>
+
 <strong>R$ 42,00</strong>
-<button class="add">Adicionar</button>
+
+<button class="add">
+Adicionar
+</button>
+
 </div>
 
 <div class="produto" data-cat="drama">
-<img src="imagenslivros/verity.png">
+
+<img src="imagenslivros/verity.png" alt="Verity">
+
 <h3>Verity</h3>
+
 <p>Drama</p>
+
 <strong>R$ 45,00</strong>
-<button class="add">Adicionar</button>
+
+<button class="add">
+Adicionar
+</button>
+
 </div>
 
 <div class="produto" data-cat="fantasia">
-<img src="imagenslivros/A vida invisivel de Eddie Larue.jpg">
+
+<img src="imagenslivros/A vida invisivel de Eddie Larue.jpg" alt="A Vida Invisível de Addie LaRue">
+
 <h3>A Vida Invisível de Addie LaRue</h3>
+
 <p>Fantasia</p>
+
 <strong>R$ 55,00</strong>
-<button class="add">Adicionar</button>
-</div>
+
+<button class="add">
+Adicionar
+</button>
 
 </div>
 
-</section>
+</div>
 
-<div id="toast">Adicionado ao carrinho ✔</div>
+</main>
 
-<footer>
+<div id="toast">
+Adicionado ao carrinho ✔
+</div>
+
+<footer id="contato">
 
 <div class="footer-info">
 
 <div class="footer-esquerda">
+
 <div class="footer-logo">
-<img src="logo.png" class="footer-logo-img">
+
+<img src="logo.png" class="footer-logo-img" alt="Logo Folha Viva">
+
+<div class="footer-texto">
+
+<span>
+Leitura, cultura e sustentabilidade
+</span>
+
 </div>
-<p>Espalhando leitura, conforto e conhecimento.</p>
+
+</div>
+
+<p>
+Transformando leitura em experiência, cultura e impacto positivo através dos livros físicos.
+</p>
+
 </div>
 
 <div class="footer-centro">
+
 <h3>Contato</h3>
-<p>(11) 99999-9999</p>
-<p>contato@folhaviva.com</p>
+
+<p>
+<i class="fa-solid fa-phone"></i>
+(11) 99999-9999
+</p>
+
+<p>
+<i class="fa-solid fa-envelope"></i>
+contato@folhaviva.com
+</p>
+
+<p>
+<i class="fa-solid fa-location-dot"></i>
+Suzano • São Paulo
+</p>
+
 </div>
 
 <div class="footer-direita">
+
 <h3>Redes sociais</h3>
 
 <div class="redes">
-<a href="#"><i class="fa-brands fa-instagram"></i></a>
-<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-<a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-<a href="#"><i class="fa-brands fa-tiktok"></i></a>
+
+<a href="#">
+<i class="fa-brands fa-instagram"></i>
+</a>
+
+<a href="#">
+<i class="fa-brands fa-facebook-f"></i>
+</a>
+
+<a href="#">
+<i class="fa-brands fa-x-twitter"></i>
+</a>
+
+<a href="#">
+<i class="fa-brands fa-tiktok"></i>
+</a>
+
 </div>
 
 </div>
@@ -140,7 +266,11 @@
 </div>
 
 <div class="footer-final">
-<span>© 2026 Folha Viva • Todos os direitos reservados</span>
+
+<span>
+© 2026 Folha Viva • Todos os direitos reservados
+</span>
+
 </div>
 
 </footer>
@@ -148,4 +278,5 @@
 <script src="script.js"></script>
 
 </body>
+
 </html>
