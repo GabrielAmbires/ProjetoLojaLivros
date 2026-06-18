@@ -79,7 +79,6 @@ export default function TelaCheckout({ navigation, route }) {
     0
   );
 
-  // Opções de frete
   const opcoesFrente = [
     { id: 'economico', nome: 'Econômico', prazo: '15-20 dias', taxa: 10.00, icone: 'package', tipoIcone: 'material' },
     { id: 'normal', nome: 'Padrão', prazo: '10-15 dias', taxa: 20.00, icone: 'truck', tipoIcone: 'material' },

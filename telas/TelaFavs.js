@@ -148,22 +148,6 @@ export default function TelaFavs({ navigation }) {
                 <View style={estilos.decorationBottom} />
             </View>
 
-            <View style={estilos.searchContainer}>
-                <Ionicons name="search" size={18} color="#8A8A8A" style={estilos.searchIcon} />
-                <TextInput
-                    style={estilos.searchInput}
-                    placeholder="Pesquisar livro..."
-                    placeholderTextColor="#B8B8B8"
-                    value={busca}
-                    onChangeText={setBusca}
-                />
-                {busca.length > 0 && (
-                    <TouchableOpacity onPress={() => setBusca('')}>
-                        <Ionicons name="close-circle" size={18} color="#B8B8B8" />
-                    </TouchableOpacity>
-                )}
-            </View>
-
             <FlatList
                 data={favoritosFiltrados}
                 renderItem={renderItem}

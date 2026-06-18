@@ -91,19 +91,19 @@ export default function TelaPerfil({ navigation }) {
           <View style={[estilos.statCard, temaEscuro && estilos.cardEscuro]}>
             <Ionicons name="book-outline" size={22} color="#41623A" />
             <Text style={[estilos.statValue, temaEscuro && estilos.textoClaro]}>12</Text>
-            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>compras</Text>
+            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>Compras</Text>
           </View>
 
           <View style={[estilos.statCard, temaEscuro && estilos.cardEscuro]}>
             <Ionicons name="heart-outline" size={22} color="#B45D5D" />
             <Text style={[estilos.statValue, temaEscuro && estilos.textoClaro]}>8</Text>
-            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>favoritos</Text>
+            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>Favoritos</Text>
           </View>
 
           <View style={[estilos.statCard, temaEscuro && estilos.cardEscuro]}>
             <Ionicons name="star-outline" size={22} color="#9CA96A" />
             <Text style={[estilos.statValue, temaEscuro && estilos.textoClaro]}>4,8</Text>
-            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>media</Text>
+            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>Media</Text>
           </View>
         </View>
 
@@ -154,7 +154,7 @@ export default function TelaPerfil({ navigation }) {
         </View>
 
         <View style={estilos.sectionHeader}>
-          <Text style={[estilos.sectionTitle, temaEscuro && estilos.textoClaro]}>Configuracoes</Text>
+          <Text style={[estilos.sectionTitle, temaEscuro && estilos.textoClaro]}>Opçoes</Text>
         </View>
 
         <View style={[estilos.settingsCard, temaEscuro && estilos.cardEscuro]}>
