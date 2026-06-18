@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useCarrinho } from '../contexto/CarrinhoContext';
 
 const favoritos = [
     {
@@ -51,25 +52,21 @@ const favoritos = [
         preco: '30,00',
         imagem: require('./imagenslivros/8.png'),
     },
-    {
-        id: '9',
-        titulo: 'Eu beijei...',
-        preco: '30,00',
-        imagem: require('./imagenslivros/9.png'),
-    },
-    {
-        id: '10',
-        titulo: 'Eu beijei...',
-        preco: '30,00',
-        imagem: require('./imagenslivros/10.png'),
-    },
-
 ];
 
-export default function TelaFavs() {
+export default function TelaFavs({ navigation }) {
+    const { adicionarAoCarrinho } = useCarrinho();
     const [favoritosState, setFavoritosState] = useState(
         favoritos.map((item) => ({ ...item, marcado: true }))
     );
+    const [abaAtiva, setAbaAtiva] = useState('favoritos');
+    const [busca, setBusca] = useState('');
+
+    const favoritosFiltrados = favoritosState.filter((item) =>
+        item.titulo.toLowerCase().includes(busca.toLowerCase())
+    );
+
+    const totalFavoritos = favoritosFiltrados.filter((item) => item.marcado).length;
 
     const alternarFavorito = (id) => {
         setFavoritosState((prev) =>
@@ -79,30 +76,58 @@ export default function TelaFavs() {
         );
     };
 
+    const navegarPelaBarra = (aba, tela) => {
+        setAbaAtiva(aba);
+
+        if (tela) {
+            navigation.navigate(tela);
+        }
+    };
+
     const renderItem = ({ item }) => (
         <View style={estilos.card}>
-            <Image source={item.imagem} style={estilos.cardImage} />
+            <View style={estilos.imageContainer}>
+                <TouchableOpacity style={estilos.imageTouch} onPress={() => navigation.navigate('produto', { id: item.id })}>
+                    <Image source={item.imagem} style={estilos.cardImage} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={estilos.favoriteButton}
+                    onPress={() => alternarFavorito(item.id)}
+                >
+                    <Ionicons
+                        name={item.marcado ? 'heart' : 'heart-outline'}
+                        size={20}
+                        color={item.marcado ? '#B45D5D' : '#8A8A8A'}
+                    />
+                </TouchableOpacity>
+            </View>
+
             <View style={estilos.cardBody}>
                 <Text style={estilos.CardTitulo}>{item.titulo}</Text>
                 <Text style={estilos.cardPreco}>R$ {item.preco}</Text>
+
                 <View style={estilos.cardActions}>
-                    <TouchableOpacity style={[estilos.iconButton, estilos.cardActionsIcon]}>
-                        <MaterialCommunityIcons name="cart-outline" size={20} color="#4A5938" />
-                    </TouchableOpacity>
+                    <View style={estilos.ratingBox}>
+                        <Ionicons name="star" size={13} color="#9CA96A" />
+                        <Text style={estilos.ratingText}>4,8</Text>
+                    </View>
+
                     <TouchableOpacity
                         style={estilos.iconButton}
-                        onPress={() => alternarFavorito(item.id)}
+                        onPress={() => {
+                            adicionarAoCarrinho(item, 1);
+                            navigation.navigate('Carrinho');
+                        }}
                     >
-                        <Ionicons
-                            name={item.marcado ? 'heart' : 'heart-outline'}
-                            size={20}
-                            color={item.marcado ? '#B45D5D' : '#8A8A8A'}
-                        />
+                        <MaterialCommunityIcons name="cart-plus" size={20} color="#31533A" />
                     </TouchableOpacity>
                 </View>
             </View>
-            <TouchableOpacity style={estilos.buyButton}>
+
+            <TouchableOpacity style={estilos.buyButton} onPress={() => navigation.navigate('produto', { id: item.id })}>
                 <Text style={estilos.buyText}>Comprar</Text>
+                <Ionicons name="arrow-forward" size={15} color="#FFF" style={estilos.buyIcon} />
             </TouchableOpacity>
         </View>
     );
@@ -110,16 +135,37 @@ export default function TelaFavs() {
     return (
         <View style={estilos.container}>
             <View style={estilos.header}>
+                <TouchableOpacity style={estilos.headerButton} onPress={() => navigation.navigate('Home')}>
+                    <Ionicons name="chevron-back" size={22} color="#FFF" />
+                </TouchableOpacity>
+
                 <View style={estilos.headerContent}>
                     <Text style={estilos.title}>Favoritos</Text>
-                    <Text style={estilos.subtitle}>Olá, Nome do usuário</Text>
+                    <Text style={estilos.subtitle}>{totalFavoritos} livros salvos</Text>
                 </View>
+
                 <View style={estilos.decorationTop} />
                 <View style={estilos.decorationBottom} />
             </View>
 
+            <View style={estilos.searchContainer}>
+                <Ionicons name="search" size={18} color="#8A8A8A" style={estilos.searchIcon} />
+                <TextInput
+                    style={estilos.searchInput}
+                    placeholder="Pesquisar livro..."
+                    placeholderTextColor="#B8B8B8"
+                    value={busca}
+                    onChangeText={setBusca}
+                />
+                {busca.length > 0 && (
+                    <TouchableOpacity onPress={() => setBusca('')}>
+                        <Ionicons name="close-circle" size={18} color="#B8B8B8" />
+                    </TouchableOpacity>
+                )}
+            </View>
+
             <FlatList
-                data={favoritosState}
+                data={favoritosFiltrados}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={estilos.listContent}
@@ -129,17 +175,29 @@ export default function TelaFavs() {
             />
 
             <View style={estilos.tabBar}>
-                <TouchableOpacity style={estilos.tabButton}>
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'home' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('home', 'Home')}
+                >
                     <Ionicons name="home-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={estilos.tabButton}>
-                    <Ionicons name="cart-outline" size={24} color="#FFF" />
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'produtos' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('produtos', 'Produtos')}
+                >
+                    <Ionicons name="grid-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={estilos.tabButton}>
-                    <MaterialCommunityIcons name="shield-outline" size={24} color="#FFF" />
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'favoritos' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('favoritos', 'Favs')}
+                >
+                    <Ionicons name="heart-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={[estilos.tabButton, estilos.tabButtonActive]}>
-                    <Ionicons name="heart" size={24} color="#FFF" />
+                <TouchableOpacity
+                    style={[estilos.tabButton, abaAtiva === 'perfil' && estilos.tabButtonActive]}
+                    onPress={() => navegarPelaBarra('perfil', 'Perfil')}
+                >
+                    <Ionicons name="person-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -152,110 +210,232 @@ const estilos = StyleSheet.create({
         backgroundColor: '#F4EDD7',
     },
     header: {
-        backgroundColor: '#E3DAB4',
-        paddingBottom: 20,
-        paddingTop: 32,
-        paddingHorizontal: 16,
-        borderBottomLeftRadius: 24,
-        borderBottomRightRadius: 24,
+        height: 112,
+        backgroundColor: '#5B7A4C',
+        paddingTop: 42,
+        paddingHorizontal: 18,
+        borderBottomLeftRadius: 26,
+        borderBottomRightRadius: 26,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
         overflow: 'hidden',
     },
+    headerButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        backgroundColor: '#41623A',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2,
+    },
+    headerContent: {
+        alignItems: 'center',
+        zIndex: 2,
+    },
     title: {
-        fontSize: 26,
-        fontWeight: '700',
-        color: '#37513E',
+        fontSize: 20,
+        fontWeight: '800',
+        color: '#FFF',
     },
     subtitle: {
-        marginTop: 5,
-        color: '#5C6C44',
-        fontSize: 13,
+        marginTop: 3,
+        color: '#F7F4D5',
+        fontSize: 12,
+        fontWeight: '700',
     },
     decorationTop: {
         position: 'absolute',
-        right: -35,
-        top: -35,
-        width: 100,
-        height: 100,
-        backgroundColor: '#37513E',
-        borderRadius: 100,
+        right: -34,
+        top: -38,
+        width: 118,
+        height: 118,
+        backgroundColor: '#E3DAB4',
+        borderRadius: 60,
         opacity: 0.22,
     },
     decorationBottom: {
         position: 'absolute',
-        left: -50,
-        top: 25,
+        left: -46,
+        bottom: -58,
         width: 130,
         height: 130,
         backgroundColor: '#8EA57A',
-        borderRadius: 100,
-        opacity: 0.24,
+        borderRadius: 70,
+        opacity: 0.28,
+    },
+    summaryCard: {
+        marginHorizontal: 18,
+        marginTop: 18,
+        backgroundColor: '#FFF8E5',
+        borderRadius: 22,
+        padding: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOpacity: 0.08,
+        shadowRadius: 14,
+        shadowOffset: { width: 0, height: 7 },
+        elevation: 5,
+    },
+    summaryIcon: {
+        width: 46,
+        height: 46,
+        borderRadius: 15,
+        backgroundColor: '#41623A',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 12,
+    },
+    summaryTextBox: {
+        flex: 1,
+    },
+    summaryTitle: {
+        color: '#1F3A24',
+        fontSize: 15,
+        fontWeight: '900',
+    },
+    summaryText: {
+        color: '#5C6C44',
+        fontSize: 12,
+        lineHeight: 17,
+        marginTop: 3,
     },
     listContent: {
-        paddingHorizontal: 8,
+        paddingHorizontal: 14,
         paddingTop: 14,
-        paddingBottom: 90,
+        paddingBottom: 94,
     },
     columnWrapper: {
         justifyContent: 'space-between',
-        marginBottom: 8,
+        marginBottom: 12,
     },
     card: {
         backgroundColor: '#FFF8E5',
-        borderRadius: 18,
+        borderRadius: 22,
         padding: 12,
         flex: 1,
         marginHorizontal: 4,
         shadowColor: '#000',
         shadowOpacity: 0.08,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 3,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        elevation: 4,
+    },
+    imageContainer: {
+        backgroundColor: '#E8E0C7',
+        borderRadius: 18,
+        height: 176,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 10,
+        overflow: 'hidden',
     },
     cardImage: {
-        width: '100%',
-        height: 160,
+        width: '86%',
+        height: 158,
         borderRadius: 14,
-        marginBottom: 10,
+        resizeMode: 'contain',
+    },
+    imageTouch: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    favoriteButton: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        width: 34,
+        height: 34,
+        borderRadius: 12,
+        backgroundColor: '#FFF8E5',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     cardBody: {
         marginBottom: 10,
     },
     CardTitulo: {
         fontSize: 15,
-        fontWeight: '700',
-        color: '#35462E',
+        fontWeight: '900',
+        color: '#1F3A24',
     },
     cardPreco: {
         marginTop: 4,
-        fontSize: 13,
-        fontWeight: '600',
-        color: '#5C6C44',
+        fontSize: 16,
+        fontWeight: '900',
+        color: '#16382B',
     },
     cardActions: {
         flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         marginTop: 10,
     },
-    cardActionsIcon: {
-        marginRight: 8,
+    ratingBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 999,
+        paddingHorizontal: 9,
+        paddingVertical: 7,
+    },
+    ratingText: {
+        color: '#31533A',
+        fontSize: 12,
+        fontWeight: '800',
+        marginLeft: 4,
     },
     iconButton: {
         width: 36,
         height: 36,
-        borderRadius: 10,
+        borderRadius: 12,
         backgroundColor: '#E8E0C7',
         alignItems: 'center',
         justifyContent: 'center',
     },
     buyButton: {
-        backgroundColor: '#758A5E',
-        borderRadius: 14,
-        paddingVertical: 9,
+        backgroundColor: '#1F3A24',
+        borderRadius: 16,
+        height: 42,
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     buyText: {
         color: '#FFF',
         fontSize: 14,
-        fontWeight: '700',
+        fontWeight: '800',
+    },
+    buyIcon: {
+        marginLeft: 6,
+    },
+    searchContainer: {
+        marginHorizontal: 18,
+        marginTop: 14,
+        marginBottom: 14,
+        backgroundColor: '#FFF8E5',
+        borderRadius: 16,
+        paddingHorizontal: 14,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 3,
+    },
+    searchIcon: {
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 14,
+        color: '#1F3A24',
+        fontWeight: '600',
+        paddingVertical: 0,
     },
     tabBar: {
         position: 'absolute',
@@ -275,14 +455,13 @@ const estilos = StyleSheet.create({
         elevation: 6,
     },
     tabButton: {
+        width: 44,
+        height: 44,
+        borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
     },
     tabButtonActive: {
         backgroundColor: '#41623A',
-        transparent: true,
-        width: 44,
-        height: 44,
-        borderRadius: 12,
     },
 });

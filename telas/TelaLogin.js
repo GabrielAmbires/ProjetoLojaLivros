@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Image } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { autenticacao } from '../config/firebaseConfig';
 
 export default function TelaLogin({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
-  const fazerLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(autenticacao, email, senha);
-    } catch (erro) {
-      setErro('Erro ao fazer login. Verifique seus dados.');
+  const fazerLogin = () => {
+    if (!email.trim() || !senha.trim()) {
+      setErro('Preencha e-mail e senha para continuar.');
+      return;
     }
+
+    setErro('');
+    navigation.navigate('Home');
   };
 
   return (
@@ -29,7 +29,10 @@ export default function TelaLogin({ navigation }) {
           <TextInput
             style={estilos.input}
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(texto) => {
+              setEmail(texto);
+              setErro('');
+            }}
             placeholder="seu@email.com"
             placeholderTextColor="#999"
           />
@@ -38,7 +41,10 @@ export default function TelaLogin({ navigation }) {
           <TextInput
             style={estilos.input}
             value={senha}
-            onChangeText={setSenha}
+            onChangeText={(texto) => {
+              setSenha(texto);
+              setErro('');
+            }}
             secureTextEntry
             placeholder="••••••••"
             placeholderTextColor="#999"
