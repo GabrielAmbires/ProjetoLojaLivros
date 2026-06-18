@@ -8,19 +8,19 @@ import { autenticacao, bd } from '../config/firebaseConfig';
 const livrosDestaque = [
   {
     id: '1',
-    titulo: 'Melhor do que nos filmes',
+    titulo: 'Melhor do que nos Filmes — Lynn Painter',
     preco: 'R$ 40,00',
     imagem: require('./imagenslivros/1.png'),
   },
   {
     id: '2',
-    titulo: 'Melhor do que nos filmes',
+    titulo: 'Verity — Colleen Hoover',
     preco: 'R$ 28,00',
     imagem: require('./imagenslivros/2.png'),
   },
   {
     id: '3',
-    titulo: 'Eu beijei...',
+    titulo: 'Por Lugares Incríveis — Jennifer Niven',
     preco: 'R$ 30,00',
     imagem: require('./imagenslivros/3.png'),
   },

@@ -1,25 +1,50 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-const avatares = [
-  require('./imagenslivros/BOOK FEST (2).png'),
-  require('./imagenslivros/1.png'),
-  require('./imagenslivros/3.png'),
-  require('./imagenslivros/8.png'),
-];
+import * as ImagePicker from 'expo-image-picker';
+import { signOut } from 'firebase/auth';
+import { autenticacao } from '../config/firebaseConfig';
 
 const preferencias = ['Romance', 'Fantasia', 'Novidades', 'Favoritos da semana'];
 
 export default function TelaPerfil({ navigation }) {
-  const [avatarAtual, setAvatarAtual] = useState(0);
+  const [fotoPerfil, setFotoPerfil] = useState(null);
+  const [tema, setTema] = useState('claro');
+  const temaEscuro = tema === 'escuro';
 
-  const trocarFoto = () => {
-    setAvatarAtual((atual) => (atual + 1) % avatares.length);
+  const escolherFoto = async () => {
+    const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissao.granted) {
+      Alert.alert('Permissao necessaria', 'Permita o acesso as fotos para alterar a foto de perfil.');
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!resultado.canceled && resultado.assets?.[0]?.uri) {
+      setFotoPerfil(resultado.assets[0].uri);
+    }
+  };
+
+  const sairDaConta = async () => {
+    try {
+      await signOut(autenticacao);
+    } finally {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    }
   };
 
   return (
-    <View style={estilos.container}>
+    <View style={[estilos.container, temaEscuro && estilos.containerEscuro]}>
       <View style={estilos.header}>
         <TouchableOpacity style={estilos.headerButton} onPress={() => navigation.navigate('Home')}>
           <Ionicons name="chevron-back" size={22} color="#FFF" />
@@ -36,19 +61,26 @@ export default function TelaPerfil({ navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={estilos.content} showsVerticalScrollIndicator={false}>
-        <View style={estilos.profileCard}>
+        <View style={[estilos.profileCard, temaEscuro && estilos.cardEscuro]}>
           <View style={estilos.avatarBox}>
-            <Image source={avatares[avatarAtual]} style={estilos.avatar} />
-            <TouchableOpacity style={estilos.cameraButton} onPress={trocarFoto}>
+            {fotoPerfil ? (
+              <Image source={{ uri: fotoPerfil }} style={estilos.avatar} />
+            ) : (
+              <View style={[estilos.avatar, estilos.avatarPadrao]}>
+                <Ionicons name="person" size={52} color={temaEscuro ? '#E8E0C7' : '#5B7A4C'} />
+              </View>
+            )}
+
+            <TouchableOpacity style={estilos.cameraButton} onPress={escolherFoto}>
               <Ionicons name="camera-outline" size={18} color="#FFF" />
             </TouchableOpacity>
           </View>
 
           <View style={estilos.profileInfo}>
-            <Text style={estilos.profileName}>Leitor Folha Viva</Text>
-            <Text style={estilos.profileEmail}>cliente@folhaviva.com</Text>
+            <Text style={[estilos.profileName, temaEscuro && estilos.textoClaro]}>Leitor Folha Viva</Text>
+            <Text style={[estilos.profileEmail, temaEscuro && estilos.textoSuaveEscuro]}>cliente@folhaviva.com</Text>
 
-            <TouchableOpacity style={estilos.changePhotoButton} onPress={trocarFoto}>
+            <TouchableOpacity style={estilos.changePhotoButton} onPress={escolherFoto}>
               <Ionicons name="image-outline" size={16} color="#1F3A24" />
               <Text style={estilos.changePhotoText}>Trocar foto de perfil</Text>
             </TouchableOpacity>
@@ -56,30 +88,30 @@ export default function TelaPerfil({ navigation }) {
         </View>
 
         <View style={estilos.statsRow}>
-          <View style={estilos.statCard}>
+          <View style={[estilos.statCard, temaEscuro && estilos.cardEscuro]}>
             <Ionicons name="book-outline" size={22} color="#41623A" />
-            <Text style={estilos.statValue}>12</Text>
-            <Text style={estilos.statLabel}>compras</Text>
+            <Text style={[estilos.statValue, temaEscuro && estilos.textoClaro]}>12</Text>
+            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>compras</Text>
           </View>
 
-          <View style={estilos.statCard}>
+          <View style={[estilos.statCard, temaEscuro && estilos.cardEscuro]}>
             <Ionicons name="heart-outline" size={22} color="#B45D5D" />
-            <Text style={estilos.statValue}>8</Text>
-            <Text style={estilos.statLabel}>favoritos</Text>
+            <Text style={[estilos.statValue, temaEscuro && estilos.textoClaro]}>8</Text>
+            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>favoritos</Text>
           </View>
 
-          <View style={estilos.statCard}>
+          <View style={[estilos.statCard, temaEscuro && estilos.cardEscuro]}>
             <Ionicons name="star-outline" size={22} color="#9CA96A" />
-            <Text style={estilos.statValue}>4,8</Text>
-            <Text style={estilos.statLabel}>media</Text>
+            <Text style={[estilos.statValue, temaEscuro && estilos.textoClaro]}>4,8</Text>
+            <Text style={[estilos.statLabel, temaEscuro && estilos.textoSuaveEscuro]}>media</Text>
           </View>
         </View>
 
         <View style={estilos.sectionHeader}>
-          <Text style={estilos.sectionTitle}>Preferencias de leitura</Text>
+          <Text style={[estilos.sectionTitle, temaEscuro && estilos.textoClaro]}>Preferencias de leitura</Text>
         </View>
 
-        <View style={estilos.preferencesCard}>
+        <View style={[estilos.preferencesCard, temaEscuro && estilos.cardEscuro]}>
           <View style={estilos.tagsRow}>
             {preferencias.map((item) => (
               <View key={item} style={estilos.tag}>
@@ -90,43 +122,52 @@ export default function TelaPerfil({ navigation }) {
 
           <View style={estilos.preferenceLine}>
             <Ionicons name="notifications-outline" size={20} color="#41623A" />
-            <Text style={estilos.preferenceText}>Avisar quando chegar livro novo</Text>
+            <Text style={[estilos.preferenceText, temaEscuro && estilos.textoSuaveEscuro]}>Avisar quando chegar livro novo</Text>
           </View>
 
           <View style={estilos.preferenceLine}>
             <Ionicons name="gift-outline" size={20} color="#41623A" />
-            <Text style={estilos.preferenceText}>Receber cupons de romance e fantasia</Text>
+            <Text style={[estilos.preferenceText, temaEscuro && estilos.textoSuaveEscuro]}>Receber cupons de romance e fantasia</Text>
           </View>
         </View>
 
         <View style={estilos.sectionHeader}>
-          <Text style={estilos.sectionTitle}>Minha conta</Text>
+          <Text style={[estilos.sectionTitle, temaEscuro && estilos.textoClaro]}>Minha conta</Text>
         </View>
 
-        <View style={estilos.accountCard}>
+        <View style={[estilos.accountCard, temaEscuro && estilos.cardEscuro]}>
           <View style={estilos.accountLine}>
             <Ionicons name="location-outline" size={20} color="#41623A" />
             <View style={estilos.accountTextBox}>
-              <Text style={estilos.accountLabel}>Endereco de entrega</Text>
-              <Text style={estilos.accountText}>Rua das Letras, 120 - Centro</Text>
+              <Text style={[estilos.accountLabel, temaEscuro && estilos.textoClaro]}>Endereco de entrega</Text>
+              <Text style={[estilos.accountText, temaEscuro && estilos.textoSuaveEscuro]}>Rua das Letras, 120 - Centro</Text>
             </View>
           </View>
 
           <View style={estilos.accountLine}>
             <Ionicons name="card-outline" size={20} color="#41623A" />
             <View style={estilos.accountTextBox}>
-              <Text style={estilos.accountLabel}>Pagamento favorito</Text>
-              <Text style={estilos.accountText}>Pix e cartao de credito</Text>
+              <Text style={[estilos.accountLabel, temaEscuro && estilos.textoClaro]}>Pagamento favorito</Text>
+              <Text style={[estilos.accountText, temaEscuro && estilos.textoSuaveEscuro]}>Pix e cartao de credito</Text>
             </View>
           </View>
+        </View>
 
-          <View style={estilos.accountLine}>
-            <Ionicons name="bookmark-outline" size={20} color="#41623A" />
-            <View style={estilos.accountTextBox}>
-              <Text style={estilos.accountLabel}>Lista atual</Text>
-              <Text style={estilos.accountText}>4 livros salvos para comprar depois</Text>
-            </View>
-          </View>
+        <View style={estilos.sectionHeader}>
+          <Text style={[estilos.sectionTitle, temaEscuro && estilos.textoClaro]}>Configuracoes</Text>
+        </View>
+
+        <View style={[estilos.settingsCard, temaEscuro && estilos.cardEscuro]}>
+
+          <TouchableOpacity style={estilos.switchAccountButton} onPress={sairDaConta} activeOpacity={0.85}>
+            <Ionicons name="swap-horizontal-outline" size={19} color="#1F3A24" />
+            <Text style={estilos.switchAccountText}>Trocar de conta</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={estilos.logoutButton} onPress={sairDaConta} activeOpacity={0.85}>
+            <Ionicons name="log-out-outline" size={19} color="#FFF" />
+            <Text style={estilos.logoutText}>Sair da conta</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
@@ -155,6 +196,9 @@ const estilos = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F4EDD7',
+  },
+  containerEscuro: {
+    backgroundColor: '#1F261F',
   },
   header: {
     height: 112,
@@ -246,6 +290,10 @@ const estilos = StyleSheet.create({
     backgroundColor: '#E8E0C7',
     resizeMode: 'cover',
   },
+  avatarPadrao: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   cameraButton: {
     position: 'absolute',
     right: -4,
@@ -270,6 +318,15 @@ const estilos = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     marginTop: 4,
+  },
+  textoClaro: {
+    color: '#FFF8E5',
+  },
+  textoSuaveEscuro: {
+    color: '#D8D0B8',
+  },
+  cardEscuro: {
+    backgroundColor: '#2F3A2F',
   },
   changePhotoButton: {
     height: 38,
@@ -397,6 +454,79 @@ const estilos = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     marginTop: 3,
+  },
+  settingsCard: {
+    backgroundColor: '#FFF8E5',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  settingLabel: {
+    color: '#1F3A24',
+    fontSize: 13,
+    fontWeight: '900',
+    marginBottom: 10,
+  },
+  themeRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 14,
+  },
+  themeButton: {
+    flex: 1,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: '#E8E0C7',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  themeButtonActive: {
+    backgroundColor: '#41623A',
+  },
+  themeButtonText: {
+    color: '#31533A',
+    fontSize: 13,
+    fontWeight: '900',
+    marginLeft: 6,
+  },
+  themeButtonTextActive: {
+    color: '#FFF',
+  },
+  switchAccountButton: {
+    height: 46,
+    borderRadius: 16,
+    backgroundColor: '#E8E0C7',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  switchAccountText: {
+    color: '#1F3A24',
+    fontSize: 14,
+    fontWeight: '900',
+    marginLeft: 8,
+  },
+  logoutButton: {
+    height: 46,
+    borderRadius: 16,
+    backgroundColor: '#B45D5D',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+  },
+  logoutText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '900',
+    marginLeft: 8,
   },
   tabBar: {
     position: 'absolute',

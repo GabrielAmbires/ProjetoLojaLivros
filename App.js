@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,9 +14,15 @@ import TelaCheckout from './telas/TelaCheckout';
 import TelaPerfil from './telas/TelaPerfil';
 import TelaCarrinho from './telas/TelaCarrinho';
 import { CarrinhoProvider, useCarrinho } from './contexto/CarrinhoContext';
+import { fontes } from './config/fontes';
 
 const Camadas = createNativeStackNavigator();
 const telasComCarrinho = ['Home', 'Produtos', 'Favs', 'produto', 'Perfil'];
+
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.style = [Text.defaultProps.style, { fontFamily: fontes.principal }];
+TextInput.defaultProps = TextInput.defaultProps || {};
+TextInput.defaultProps.style = [TextInput.defaultProps.style, { fontFamily: fontes.principal }];
 
 function BotaoCarrinhoGlobal({ navigationRef, rotaAtual }) {
   const { totalItens } = useCarrinho();
