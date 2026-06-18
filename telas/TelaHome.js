@@ -155,12 +155,6 @@ export default function TelaHome({ navigation, route }) {
           <Ionicons name="home-outline" size={24} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[estilos.tabButton, abaAtiva === 'carrinho' && estilos.tabButtonActive]}
-          onPress={() => navegarPelaBarra('carrinho', 'produto')}
-        >
-          <Ionicons name="cart-outline" size={24} color="#FFF" />
-        </TouchableOpacity>
-        <TouchableOpacity
           style={[estilos.tabButton, abaAtiva === 'produtos' && estilos.tabButtonActive]}
           onPress={() => navegarPelaBarra('produtos', 'Produtos')}
         >

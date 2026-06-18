@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Image } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import { useCarrinho } from '../contexto/CarrinhoContext';
+
+const precoNumero = (preco) => Number(String(preco).replace('R$', '').replace(',', '.').trim()) || 0;
+const formatarPreco = (valor) => valor.toFixed(2).replace('.', ',');
 
 const formasPagamento = [
   {
@@ -57,13 +61,23 @@ export default function TelaCheckout({ navigation, route }) {
   const [pagamentoSelecionado, setPagamentoSelecionado] = useState(null);
   const [etapa, setEtapa] = useState(1);
   const [freteSelecionado, setFreteSelecionado] = useState('normal');
+  const { limparCarrinho } = useCarrinho();
 
-  const produto = route?.params?.produto;
+  const itensCarrinho = route?.params?.itensCarrinho;
+  const produtoParam = route?.params?.produto;
   const quantidade = route?.params?.quantidade || 1;
   const tipo = route?.params?.tipo || 'compra';
+  const itensPedido = Array.isArray(itensCarrinho) && itensCarrinho.length > 0
+    ? itensCarrinho
+    : produtoParam
+      ? [{ ...produtoParam, quantidade }]
+      : [];
+  const produto = itensPedido[0] || { titulo: 'Pedido', preco: '0,00' };
 
-  const precoUnitario = parseFloat(produto.preco.replace(',', '.'));
-  const precoSubtotal = precoUnitario * quantidade;
+  const precoSubtotal = itensPedido.reduce(
+    (total, item) => total + precoNumero(item.preco) * item.quantidade,
+    0
+  );
 
   // Opções de frete
   const opcoesFrente = [
@@ -74,7 +88,15 @@ export default function TelaCheckout({ navigation, route }) {
 
   const freteAtual = opcoesFrente.find(f => f.id === freteSelecionado);
   const taxaFrete = freteAtual?.taxa || 20.00;
-  const precoTotal = (precoSubtotal + taxaFrete).toFixed(2).replace('.', ',');
+  const precoTotal = formatarPreco(precoSubtotal + taxaFrete);
+
+  const finalizarPagamento = () => {
+    if (tipo === 'carrinho') {
+      limparCarrinho();
+    }
+
+    navigation.navigate('Home');
+  };
 
   const renderIcone = (forma) => {
     if (forma.tipo === 'ionicons') {
@@ -133,7 +155,7 @@ export default function TelaCheckout({ navigation, route }) {
             <View style={estilos.inputContainer}>
               <Text style={estilos.label}>Parcelamento</Text>
               <View style={estilos.selectContainer}>
-                <Text style={estilos.selectTexto}>1x de R$ {produto.preco}</Text>
+                <Text style={estilos.selectTexto}>1x de R$ {formatarPreco(precoSubtotal)}</Text>
                 <Ionicons name="chevron-down" size={20} color="#31533A" />
               </View>
             </View>
@@ -235,14 +257,21 @@ export default function TelaCheckout({ navigation, route }) {
         <View style={estilos.resumoCard}>
           <Text style={estilos.resumoTitulo}>Resumo do Pedido</Text>
 
-          <View style={estilos.itemPedido}>
-            <Text style={estilos.itemNome}>{produto.titulo}</Text>
-            <Text style={estilos.itemPreco}>R$ {produto.preco}</Text>
-          </View>
+          {itensPedido.map((item) => (
+            <View key={item.id || item.titulo} style={estilos.itemPedido}>
+              <View style={estilos.itemResumoTexto}>
+                <Text style={estilos.itemNome}>{item.titulo}</Text>
+                <Text style={estilos.itemLabel}>Quantidade: {item.quantidade}</Text>
+              </View>
+              <Text style={estilos.itemPreco}>
+                R$ {formatarPreco(precoNumero(item.preco) * item.quantidade)}
+              </Text>
+            </View>
+          ))}
 
           <View style={estilos.itemPedido}>
-            <Text style={estilos.itemLabel}>Quantidade: {quantidade}</Text>
-            <Text style={estilos.itemLabel}>Subtotal: R$ {precoSubtotal.toFixed(2).replace('.', ',')}</Text>
+            <Text style={estilos.itemLabel}>Subtotal:</Text>
+            <Text style={estilos.itemLabel}>R$ {formatarPreco(precoSubtotal)}</Text>
           </View>
 
           <View style={estilos.itemPedido}>
@@ -344,7 +373,7 @@ export default function TelaCheckout({ navigation, route }) {
 
             <TouchableOpacity
               style={estilos.botaoConfirmar}
-              onPress={() => navigation.navigate('Home')}
+              onPress={finalizarPagamento}
             >
               <Text style={estilos.botaoConfirmarTexto}>Confirmar Pagamento</Text>
               <Ionicons name="arrow-forward" size={18} color="#FFF" />
@@ -407,6 +436,10 @@ const estilos = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#42503E',
+  },
+  itemResumoTexto: {
+    flex: 1,
+    marginRight: 12,
   },
   itemPreco: {
     fontSize: 14,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useCarrinho } from '../contexto/CarrinhoContext';
 
 const produtosDatabase = {
   '1': { titulo: 'Powerless', autor: 'Matthew Cody', preco: '40,00', precoCheio: '80,00', desconto: '50%', imagem: require('./imagenslivros/1.png'), sinopse: 'Um jovem descobre poderes incríveis em um mundo onde super-heróis são comuns. Uma história envolvente de descoberta, amizade e poder.' },
@@ -16,11 +17,13 @@ const produtosDatabase = {
 };
 
 export default function TelaDoProduto({ navigation, route }) {
-  const [abaAtiva, setAbaAtiva] = useState('carrinho');
+  const [abaAtiva, setAbaAtiva] = useState('produtos');
   const [quantidade, setQuantidade] = useState(1);
+  const { adicionarAoCarrinho } = useCarrinho();
   
   const produtoId = route?.params?.id || '3';
   const produto = produtosDatabase[produtoId] || produtosDatabase['3'];
+  const produtoSelecionado = { ...produto, id: produtoId };
 
   const navegarPelaBarra = (aba, tela) => {
     setAbaAtiva(aba);
@@ -32,19 +35,15 @@ export default function TelaDoProduto({ navigation, route }) {
 
   const handleComprarAgora = () => {
     navigation.navigate('Checkout', { 
-      produto, 
+      produto: produtoSelecionado, 
       quantidade, 
       tipo: 'compra'
     });
   };
 
   const handleAdicionarCarrinho = () => {
-    // Aqui você poderia adicionar ao carrinho e mostrar uma notificação
-    navigation.navigate('Checkout', { 
-      produto, 
-      quantidade, 
-      tipo: 'carrinho'
-    });
+    adicionarAoCarrinho(produtoSelecionado, quantidade);
+    navigation.navigate('Carrinho');
   };
 
   return (
@@ -155,12 +154,6 @@ export default function TelaDoProduto({ navigation, route }) {
           onPress={() => navegarPelaBarra('home', 'Home')}
         >
           <Ionicons name="home-outline" size={24} color="#FFF" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.navButton, abaAtiva === 'carrinho' && styles.navButtonActive]}
-          onPress={() => navegarPelaBarra('carrinho', 'produto')}
-        >
-          <Ionicons name="cart-outline" size={24} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.navButton, abaAtiva === 'produtos' && styles.navButtonActive]}

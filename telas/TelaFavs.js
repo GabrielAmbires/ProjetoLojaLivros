@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useCarrinho } from '../contexto/CarrinhoContext';
 
 const favoritos = [
     {
@@ -54,6 +55,7 @@ const favoritos = [
 ];
 
 export default function TelaFavs({ navigation }) {
+    const { adicionarAoCarrinho } = useCarrinho();
     const [favoritosState, setFavoritosState] = useState(
         favoritos.map((item) => ({ ...item, marcado: true }))
     );
@@ -111,7 +113,13 @@ export default function TelaFavs({ navigation }) {
                         <Text style={estilos.ratingText}>4,8</Text>
                     </View>
 
-                    <TouchableOpacity style={estilos.iconButton} onPress={() => navigation.navigate('produto', { id: item.id })}>
+                    <TouchableOpacity
+                        style={estilos.iconButton}
+                        onPress={() => {
+                            adicionarAoCarrinho(item, 1);
+                            navigation.navigate('Carrinho');
+                        }}
+                    >
                         <MaterialCommunityIcons name="cart-plus" size={20} color="#31533A" />
                     </TouchableOpacity>
                 </View>
@@ -172,12 +180,6 @@ export default function TelaFavs({ navigation }) {
                     onPress={() => navegarPelaBarra('home', 'Home')}
                 >
                     <Ionicons name="home-outline" size={24} color="#FFF" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[estilos.tabButton, abaAtiva === 'carrinho' && estilos.tabButtonActive]}
-                    onPress={() => navegarPelaBarra('carrinho', 'produto')}
-                >
-                    <Ionicons name="cart-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[estilos.tabButton, abaAtiva === 'produtos' && estilos.tabButtonActive]}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useCarrinho } from '../contexto/CarrinhoContext';
 
 const produtos = [
   {
@@ -68,6 +69,7 @@ const produtos = [
 export default function TelaProdutos({ navigation }) {
   const [abaAtiva, setAbaAtiva] = useState('produtos');
   const [busca, setBusca] = useState('');
+  const { adicionarAoCarrinho } = useCarrinho();
 
   const produtosFiltrados = produtos.filter((item) =>
     item.titulo.toLowerCase().includes(busca.toLowerCase())
@@ -96,7 +98,10 @@ export default function TelaProdutos({ navigation }) {
 
         <TouchableOpacity 
           style={estilos.iconButton}
-          onPress={() => navigation.navigate('produto', { id: item.id })}
+          onPress={() => {
+            adicionarAoCarrinho(item, 1);
+            navigation.navigate('Carrinho');
+          }}
         >
           <Ionicons name="cart-outline" size={18} color="#31533A" />
         </TouchableOpacity>
@@ -163,12 +168,6 @@ export default function TelaProdutos({ navigation }) {
           onPress={() => navegarPelaBarra('home', 'Home')}
         >
           <Ionicons name="home-outline" size={24} color="#FFF" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[estilos.tabButton, abaAtiva === 'carrinho' && estilos.tabButtonActive]}
-          onPress={() => navegarPelaBarra('carrinho', 'produto')}
-        >
-          <Ionicons name="cart-outline" size={24} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity
           style={[estilos.tabButton, abaAtiva === 'produtos' && estilos.tabButtonActive]}
