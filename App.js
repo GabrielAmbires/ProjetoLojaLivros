@@ -29,7 +29,7 @@ function BotaoCarrinhoGlobal({ navigationRef, rotaAtual }) {
     <TouchableOpacity
       style={[
         estilos.botaoCarrinhoGlobal,
-        rotaAtual === 'Home' ? estilos.botaoCarrinhoHome : estilos.botaoCarrinhoComVoltar,
+        estilos.botaoCarrinhoTopoDireito,
       ]}
       onPress={() => navigationRef.current?.navigate('Carrinho')}
       activeOpacity={0.85}
@@ -92,11 +92,8 @@ const estilos = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
   },
-  botaoCarrinhoHome: {
-    left: 18,
-  },
-  botaoCarrinhoComVoltar: {
-    left: 66,
+  botaoCarrinhoTopoDireito: {
+    right: 18,
   },
   badgeCarrinho: {
     position: 'absolute',
