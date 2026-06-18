@@ -19,11 +19,12 @@ const produtosDatabase = {
 export default function TelaDoProduto({ navigation, route }) {
   const [abaAtiva, setAbaAtiva] = useState('produtos');
   const [quantidade, setQuantidade] = useState(1);
-  const { adicionarAoCarrinho } = useCarrinho();
+  const { adicionarAoCarrinho, alternarFavorito, produtoEstaFavoritado } = useCarrinho();
   
   const produtoId = route?.params?.id || '3';
   const produto = produtosDatabase[produtoId] || produtosDatabase['3'];
   const produtoSelecionado = { ...produto, id: produtoId };
+  const favoritado = produtoEstaFavoritado(produtoId);
 
   const navegarPelaBarra = (aba, tela) => {
     setAbaAtiva(aba);
@@ -55,8 +56,8 @@ export default function TelaDoProduto({ navigation, route }) {
 
         <Text style={styles.headerTitle}>Detalhes</Text>
 
-        <TouchableOpacity style={styles.headerButton} onPress={() => navigation.navigate('Favs')}>
-          <Ionicons name="heart-outline" size={22} color="#FFF" />
+        <TouchableOpacity style={styles.headerButton} onPress={() => alternarFavorito(produtoSelecionado)}>
+          <Ionicons name={favoritado ? 'heart' : 'heart-outline'} size={22} color="#FFF" />
         </TouchableOpacity>
 
         <View style={styles.decorationTop} />

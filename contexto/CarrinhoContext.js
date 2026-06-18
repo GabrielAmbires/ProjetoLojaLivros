@@ -4,6 +4,7 @@ const CarrinhoContext = createContext(null);
 
 export function CarrinhoProvider({ children }) {
   const [itens, setItens] = useState([]);
+  const [favoritos, setFavoritos] = useState([]);
 
   const adicionarAoCarrinho = (produto, quantidade = 1) => {
     setItens((atuais) => {
@@ -42,18 +43,56 @@ export function CarrinhoProvider({ children }) {
     setItens([]);
   };
 
+  const produtoEstaFavoritado = (produtoId) =>
+    favoritos.some((item) => item.id === produtoId);
+
+  const adicionarAosFavoritos = (produto) => {
+    setFavoritos((atuais) => {
+      const jaFavoritado = atuais.some((item) => item.id === produto.id);
+
+      if (jaFavoritado) {
+        return atuais;
+      }
+
+      return [...atuais, produto];
+    });
+  };
+
+  const removerDosFavoritos = (produtoId) => {
+    setFavoritos((atuais) => atuais.filter((item) => item.id !== produtoId));
+  };
+
+  const alternarFavorito = (produto) => {
+    setFavoritos((atuais) => {
+      const jaFavoritado = atuais.some((item) => item.id === produto.id);
+
+      if (jaFavoritado) {
+        return atuais.filter((item) => item.id !== produto.id);
+      }
+
+      return [...atuais, produto];
+    });
+  };
+
   const totalItens = itens.reduce((total, item) => total + item.quantidade, 0);
+  const totalFavoritos = favoritos.length;
 
   const valor = useMemo(
     () => ({
       itens,
       totalItens,
+      favoritos,
+      totalFavoritos,
       adicionarAoCarrinho,
       removerDoCarrinho,
       alterarQuantidade,
       limparCarrinho,
+      produtoEstaFavoritado,
+      adicionarAosFavoritos,
+      removerDosFavoritos,
+      alternarFavorito,
     }),
-    [itens, totalItens]
+    [itens, totalItens, favoritos, totalFavoritos]
   );
 
   return (

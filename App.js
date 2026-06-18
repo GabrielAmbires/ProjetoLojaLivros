@@ -13,11 +13,13 @@ import TelaProdutos from './telas/TelaProdutos';
 import TelaCheckout from './telas/TelaCheckout';
 import TelaPerfil from './telas/TelaPerfil';
 import TelaCarrinho from './telas/TelaCarrinho';
+import TelaAdm from './telas/TelaAdm';
 import { CarrinhoProvider, useCarrinho } from './contexto/CarrinhoContext';
 import { fontes } from './config/fontes';
 
 const Camadas = createNativeStackNavigator();
 const telasComCarrinho = ['Home', 'Produtos', 'Favs', 'produto', 'Perfil'];
+const telasComAdm = ['Home', 'Produtos', 'Favs', 'produto', 'Perfil'];
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.style = [Text.defaultProps.style, { fontFamily: fontes.principal }];
@@ -50,6 +52,25 @@ function BotaoCarrinhoGlobal({ navigationRef, rotaAtual }) {
   );
 }
 
+function BotaoAdmGlobal({ navigationRef, rotaAtual }) {
+  if (!telasComAdm.includes(rotaAtual)) {
+    return null;
+  }
+
+  return (
+    <TouchableOpacity
+      style={[
+        estilos.botaoCarrinhoGlobal,
+        estilos.botaoAdmTopoEsquerdo,
+      ]}
+      onPress={() => navigationRef.current?.navigate('Adm')}
+      activeOpacity={0.85}
+    >
+      <Ionicons name="code-slash-outline" size={23} color="#FFF" />
+    </TouchableOpacity>
+  );
+}
+
 export default function App() {
   const navigationRef = useRef(null);
   const [rotaAtual, setRotaAtual] = useState('Login');
@@ -72,9 +93,11 @@ export default function App() {
             <Camadas.Screen name="Carrinho" component={TelaCarrinho} />
             <Camadas.Screen name="Checkout" component={TelaCheckout} />
             <Camadas.Screen name="Perfil" component={TelaPerfil} />
+            <Camadas.Screen name="Adm" component={TelaAdm} />
           </Camadas.Navigator>
         </NavigationContainer>
 
+        <BotaoAdmGlobal navigationRef={navigationRef} rotaAtual={rotaAtual} />
         <BotaoCarrinhoGlobal navigationRef={navigationRef} rotaAtual={rotaAtual} />
       </CarrinhoProvider>
     </SafeAreaProvider>
@@ -100,6 +123,9 @@ const estilos = StyleSheet.create({
   },
   botaoCarrinhoTopoDireito: {
     right: 18,
+  },
+  botaoAdmTopoEsquerdo: {
+    left: 18,
   },
   badgeCarrinho: {
     position: 'absolute',

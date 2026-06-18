@@ -69,7 +69,7 @@ const produtos = [
 export default function TelaProdutos({ navigation }) {
   const [abaAtiva, setAbaAtiva] = useState('produtos');
   const [busca, setBusca] = useState('');
-  const { adicionarAoCarrinho } = useCarrinho();
+  const { adicionarAoCarrinho, alternarFavorito, produtoEstaFavoritado } = useCarrinho();
 
   const produtosFiltrados = produtos.filter((item) =>
     item.titulo.toLowerCase().includes(busca.toLowerCase())
@@ -83,31 +83,46 @@ export default function TelaProdutos({ navigation }) {
     }
   };
 
-  const renderProduto = ({ item }) => (
-    <TouchableOpacity style={estilos.card} onPress={() => navigation.navigate('produto', { id: item.id })}>
-      <View style={estilos.imageContainer}>
-        <Image source={item.imagem} style={estilos.cardImage} />
-      </View>
+  const renderProduto = ({ item }) => {
+    const favoritado = produtoEstaFavoritado(item.id);
 
-      <Text style={estilos.cardTitulo} numberOfLines={2}>
-        {item.titulo}
-      </Text>
+    return (
+      <TouchableOpacity style={estilos.card} onPress={() => navigation.navigate('produto', { id: item.id })}>
+        <View style={estilos.imageContainer}>
+          <Image source={item.imagem} style={estilos.cardImage} />
 
-      <View style={estilos.cardFooter}>
-        <Text style={estilos.cardPreco}>R$ {item.preco}</Text>
+          <TouchableOpacity
+            style={estilos.favoriteButton}
+            onPress={() => alternarFavorito(item)}
+          >
+            <Ionicons
+              name={favoritado ? 'heart' : 'heart-outline'}
+              size={20}
+              color={favoritado ? '#B45D5D' : '#31533A'}
+            />
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity 
-          style={estilos.iconButton}
-          onPress={() => {
-            adicionarAoCarrinho(item, 1);
-            navigation.navigate('Carrinho');
-          }}
-        >
-          <Ionicons name="cart-outline" size={18} color="#31533A" />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
+        <Text style={estilos.cardTitulo} numberOfLines={2}>
+          {item.titulo}
+        </Text>
+
+        <View style={estilos.cardFooter}>
+          <Text style={estilos.cardPreco}>R$ {item.preco}</Text>
+
+          <TouchableOpacity 
+            style={estilos.iconButton}
+            onPress={() => {
+              adicionarAoCarrinho(item, 1);
+              navigation.navigate('Carrinho');
+            }}
+          >
+            <Ionicons name="cart-outline" size={18} color="#31533A" />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={estilos.container}>
@@ -309,6 +324,17 @@ const estilos = StyleSheet.create({
     height: 158,
     borderRadius: 14,
     resizeMode: 'contain',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 34,
+    height: 34,
+    borderRadius: 12,
+    backgroundColor: '#FFF8E5',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardTitulo: {
     fontSize: 15,
