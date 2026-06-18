@@ -358,10 +358,8 @@ export default function TelaCheckout({ navigation, route }) {
           ))}
         </View>
 
-        {/* Formulário de Pagamento */}
         {pagamentoSelecionado && renderFormularioPagamento()}
 
-        {/* Botões de Ação */}
         {pagamentoSelecionado && (
           <View style={estilos.acaoContainer}>
             <TouchableOpacity
